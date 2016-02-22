@@ -36,7 +36,7 @@
 		<p>
 		<div class="form-group">
 			<div class="controls">
-				<button type="submit" class="btn btn-warning" style="color:grey">Login</button>
+				<button type="submit" class="btn btn-warning" style="color:grey">Next</button>
 			</div>
 		</div>
 		</p>

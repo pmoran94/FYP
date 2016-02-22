@@ -123,6 +123,17 @@ class customersDAO extends BaseDAO {
 		return $result; 
 	}
 
+	public function getUserDetails($uid){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM customers ";
+		$sqlQuery .= "WHERE id='$uid' ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+			
+		return $result;
+
+	}
+
 	public function getUserId($email){
 		$sqlQuery = "SELECT id ";
 		$sqlQuery .= "FROM customers ";

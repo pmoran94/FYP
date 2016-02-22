@@ -17,7 +17,7 @@ include_once 'validation_factory_admin.php';
 class Model {
 	public $DAO_Factory,$adminValidationFactory,$adminAuthenticationFactory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allUsers="", $allOrders="",$allIssues="",$allEmployees="",
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allUsers="",$allIssues="",$allEmployees="",
 	$searchResults=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
@@ -79,7 +79,6 @@ class Model {
 	public function reportIssue($subject,$content,$userId,$userPO,$date,$username){
 
 		$this->notificationsDAO->reportIssue($subject,$content,$userId,$userPO,$date,$username);
-
 	}
 	/*
 		EMPLOYEE LOG IN METHODS
@@ -105,14 +104,20 @@ class Model {
 	/*
 		OTHER METHODS TO BE FIXED
 	*/
+
+	public function getUserDetails(){
+		$uid = $_SESSION['user_id'];
+		$this->userDetails = $this->customersDAO->getUserDetails($uid);
+	}
+	
 	public function getAllUsers(){
 	
 		$this->allUsers =  $this->customersDAO->getAllUsers();
 	}
 	
-	public function getAllOrders(){
-		$this->allOrders = $this->qrticketsDAO->getAllOrders();
-	}
+	//public function getAllOrders(){
+//		$this->allOrders = $this->qrticketsDAO->getAllOrders();
+	//}
 	public function getAllIssues(){
 		$this->allIssues = $this->notificationsDAO->getAllIssues();
 	}

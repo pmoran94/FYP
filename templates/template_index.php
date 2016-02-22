@@ -30,12 +30,12 @@
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown">Profile<span class="caret"></span></a>
 	     							<ul class="dropdown-menu">
-										<li><a href="#"><span class="glyphicon glyphicon-user"></span> View Profile</a></li>
-										<li><a href="#"><span class="glyphicon glyphicon-cog"></span> Edit Profile Info.</a></li>
+										<li><a href="?userValue=viewDetails"><span class="glyphicon glyphicon-user"></span> View Profile</a></li>
+										<li><a href="?userValue=editDetails"><span class="glyphicon glyphicon-cog"></span> Edit Profile Info.</a></li>
 									</ul>
 								</li>
 								<li class=""><a href='?button=liOrder' name="viewActiveTickets">View Active QR's</a></li>
-								<li class=""><a href='?button=liTopUp' name="topUp">Top Up</a></li>
+								<li class=""><a href='?button=liTopUp' name="topUp">MyStripe</a></li>
 								<li class=""><a href='?button=liReport' name="reportIssue">Report Issue</a></li>
 								<li class=""><a href='?button=liPassChange' name="changePass">Change Password</a></li>
 							</ul>
@@ -54,7 +54,7 @@
 		<div id="screenTop">
 		</div>
 
-	<div id="sidebar">
+	<div id="sidebar" style="margin-top:2%">
 
 		<h3 class="text-center" ><?php echo $appName;?> </h3>
 		<ul class="sidebar-nav">
@@ -64,7 +64,7 @@
 			<li class="btn-block "><a href="achievementsFull.html">View Issues</a></li>
 			<li class="btn-block "><a href="skillsFull.html">Skills</a></li>
 		</ul>
-		<p style="color:white">Find me on:</p>
+		<p>Find me on:</p>
 		<div style="padding-left:5em">
 			<a href="#"><span class="glyphicon glyphicon-facebook"></span></a>
 			<a href="#"><span class="glyphicon glyphicon-github"></span></a>
@@ -76,11 +76,11 @@
 	</div>
 	
 
-			<div id="main-content" class="container ">
+			<div id="main-content" class="container" style="margin-top: 2%">
 				<div class="col-lg-2">
 					<div>
 						<ul class="nav nav-pills nav-stacked">
-						    <li class="active"><a data-toggle="pill" href="#stampdiv">Postal Stamp</a></li>
+						    <li><a data-toggle="pill" href="#stampdiv">Postal Stamp</a></li>
 						    <li><a a data-toggle="pill" href="#cparkdiv">Parking Ticket</a></li>
 						    <li><a a data-toggle="pill" href="#eventdiv">Create Event</a></li>
 						</ul>
@@ -111,8 +111,18 @@
 						echo	"</form>";
 						?>
 					<!--/div-->
-					<?php echo $leftBox;
-					 ?>
+					<?php
+						$userDropMenu = $_GET['userValue'];
+
+						if( isset($userDropMenu))
+							if($userDropMenu=='viewDetails')
+								include_once 'usersDetails.php';
+							else if($userDropMenu=='editDetails')
+								include_once 'editUserDetails.php';
+						else if(isset($_POST['editUserDetailsP']))
+							include_once 'editUserDetails.php';
+						echo $leftBox;
+					?>
 					<br>
 
 				</div>

@@ -29,6 +29,11 @@ Please fill in all fields.
 			<label for="fAddr">Address</label> 
 			<input type="textarea" id="fAddr" name="fAddr" style="height:80px;width:100%" placeholder="Address" maxlength="50" required />
 		</p>
+		Car Registration
+		<div id=enableCarReg>
+			<input type=text name="fCarReg" id="fCarReg" style="height:40px;width:50%" placeholder="Car Registration" maxlenght="13"> &nbsp&nbspI Dont Drive&nbsp<input type=checkbox name=enableCarRegistration value='no'>
+		</div>
+
 		<p>
 			<label for="fEmail">Email</label> <input type="email"
 				id="fEmail" name="fEmail" placeholder="Email"
@@ -47,7 +52,7 @@ Please fill in all fields.
 		<p id='message'></p>
     	</p>
 
-    	<script>
+    	<script type="text/javascript">
 			$('#fPassConf').on('keyup', function () {
 			    if ($(this).val() == $('#fPassword').val()) {
 			        $('#message').html('matching').css('color', 'green');

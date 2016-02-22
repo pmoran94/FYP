@@ -80,9 +80,9 @@
 			//Calling the updateHeader  method, which calls methods from the model to check the login status of the user, and to update that status if needed
 			$this->updateHeader ();
 			$this->model->getAllUsers();
-			$this->model->getAllOrders();
 			$this->model->getAllIssues();
 			$this->model->getAllEmployees();
+			$this->model->getUserDetails();
 			#$this->model->search($parameters);
 		}
 		
@@ -316,7 +316,7 @@
 										/*
 											This script is included to send SMS message to new user, using the mobile number they provided.
 										*/
-										//include_once './sendSMS.php';
+										 //include_once './sendSMS.php';
 										return (true);
 										
 									}
@@ -469,14 +469,6 @@
 				$this->model->updateLoginStatus ();
 		}
 			
-		
-		function updateUser($parameters){
-			$username = $_SESSION['username'];
-			$password = $parameters["fPassword"];
-			$email = $parameters["fEmail"];
-			
-			$this->model->updateUser($username,$password,$email);
-		}
 	
 	}
 ?>
