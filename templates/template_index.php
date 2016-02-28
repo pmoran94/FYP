@@ -94,7 +94,7 @@
 
 
 						echo 	"<div class='tab-pane fade in active' id='stampdiv'>";
-						echo 	"<button class='btn-info' type='button' style='margin-left:40%' name='postalStamp'>  <a href='./phpqrcode/index.php?genButton=stamp&ponumber=$ponumber'>Generate Postal Stamp</a></button>";
+						echo 	"<button class='btn-info' type='button' style='margin-left:40%' name='postalStamp'>  <a href='?button=liCreateStamp'>Generate Postal Stamp</a></button>";
 						echo	"</div>";
 
 

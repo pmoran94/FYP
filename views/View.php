@@ -41,7 +41,7 @@ class View {
 		$changePinForm = file_get_contents('./templates/changePinForm.php');
 		$loginBar = file_get_contents('./templates/loginaBar.php');
 		$emailsForm = file_get_contents('./templates/inviteEmails_form.php');
-		
+		$stampForm = file_get_contents('./templates/postalStampForm.php');
 
 
 		$authenticationErrorMessage = "";
@@ -86,7 +86,7 @@ class View {
 					}else
 						$newVar = "<h2 style='color:red;size:20'>You are an Employee</h2>";
 						//$introTop = $username . " : " . $empnumber;
-						$rightBox = "<img src='./images/cus1.jpe' alt='Customer'>"  . $newVar  ;
+						$rightBox = "<img src='./images/cus1.jpe' alt=''>"  . $newVar  ;
 				}
 				else
 					$newVar = "<h2 style='color:red;size:20'>You are a Customer - </h2>";
@@ -102,6 +102,9 @@ class View {
 					}
 					else if($link=='liCreateEvent'){
 						$leftBox = $emailsForm;
+					}
+					else if($link == 'liCreateStamp'){
+						$leftBox = $stampForm;
 					}
 					else if($link =='liPassChange'){
 						$leftBox = $userChangePassword;

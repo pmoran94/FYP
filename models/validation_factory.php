@@ -2,11 +2,13 @@
 class validation_factory {
 	private $customersDAO;
 	private $employeesDAO;
+	private $qrticketsDAO;
 
-	public function __construct($customersDAO,$employeesDAO) {
+	public function __construct($customersDAO,$employeesDAO,$qrticketsDAO) {
 		//use the usersDAO in this script
 		$this->customersDAO = $customersDAO;
 		$this->employeesDAO = $employeesDAO;
+		$this->qrticketsDAO = $qrticketsDAO;
 	}
 
 	/**
@@ -129,5 +131,43 @@ class validation_factory {
 
 		return ($empNum);
 	}
+
+	public function eventIDGenerator(){
+		$eventID;
+		$flag = 0;
+		
+		while($flag == 0){
+
+			$eventID = rand(1000000,9999999);
+
+			if( $this->qrticketsDAO->isEventIDValid($eventID)){
+				$flag = 0 ;
+			}
+			else
+				$flag =1;
+		}
+
+		return ($eventID);
+	}
+
+	public function qrcodeIDGenerator(){
+		$qrID;
+		$flag = 0;
+		
+		while($flag == 0){
+
+			$qrID = rand(1000000,9999999);
+
+			if( $this->qrticketsDAO->isQRCodeIDvalid($qrID)){
+				$flag = 0 ;
+			}
+			else
+				$flag =1;
+		}
+
+		return ($qrID);
+	}
+	
+
 }
 ?>

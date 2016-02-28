@@ -11,8 +11,11 @@
 				case "insertNewUser" :
 					$this->insertNewCustomer ( $parameters );
 					break;
-				case "sendInvites" : 
-					$this->sendEventInvites ($parameters);
+				case "sendInvites" :
+					$this->createEvent($parameters); 
+					break;
+				case "createPostStamp":
+					$this->createStamp($parameters);
 					break;
 				case "deleteCustomer" : 
 					$this->deleteCustomer($parameters);
@@ -99,11 +102,6 @@
 			$this->model->reportIssue($subject,$content,$userId,$userPO,$date,$username);
 		}
 
-		function transferMoney($parameters){
-			
-			
-
-		}
 
 		function updateUserForm(){
 			$userId = $this->model->authenticationFactory->getIDLoggedIn();
@@ -185,21 +183,47 @@
 			}
 		}
 
-		function sendEventInvites($parameters){
+
+		function createEvent($parameters){
+			$eventCreator= $this->model->authenticationFactory->getPONumberLoggedIn();
+			$eventName= $parameters["nameOfEvent"];
+			$eventDesc= $parameters["descOfEvent"];
+			$eventDate= $parameters["dateOfEvent"];
+			$eventLoc=$parameters["eventLocation"];
+			$noOfInvites="";
+			$inviteType=$parameters["inviteType"];
+			$eventID=//generate random value (not already in database)
+			$dateOfCreation = date('Y/m/d');
+
 			$message = "You are invited to my event!";
 			$subject = "Event invite!";
 			$email = $parameters['emails'];
-			
-			$message = str_replace("\n.", "\n..", $message);
-			$wrappedmessage = wordwrap($message, 70, "\r\n");
+			$qrType = "EVENT";
 
-			mail('pmoran946@gmail.com',$subject,$wrappedmessage);
-			ini_set('display_errors','1');
+			//check that the variables are not empty
 
-			//mail('pmoran94@hotmail.com',$subject,$message);
+			$this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation);
+		}
 
-			header('location: ./index.php');
+		function createParkingTicket($parameters){
+			return true;
+		}
 
+		function createStamp($parameters){
+
+			$destination = $parameters["destination"];
+			$weight = $parameters["weight"];
+			$type = $parameters["type"];
+			$qrType = "STAMP";
+			$stampID = $this->model->validationFactory->qrcodeIDGenerator();
+			$dateCreated = date('Y/m/d');
+			$userPO = $this->model->authenticationFactory->getPONumberLoggedIn();
+
+
+			if($this->model->insertIntoQRTable($qrType,$stampID)){
+				$this->model->createStamp($destination,$weight,$type,$stampID,$userPO);
+				// Code to call Download for the QR page.
+			}
 		}
 
 		function makeOrder($parameters){
@@ -219,71 +243,12 @@
 
 		}
 
-		/*
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		/**
+	
+			THE FOLLOWING ARE INSERT USERS AND LOGIN FIELDS.
+	
 		*/
-
-
-
-
-
-
-		/*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		*/
-
 
 		function insertNewCustomer($parameters) {
 			$firstName = $parameters["fFirstname"];

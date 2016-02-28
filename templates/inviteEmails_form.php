@@ -39,7 +39,7 @@
 		<p>
 		<div class="form-group">
 			<div class="controls">
-				<button type="submit" class="btn btn-warning" style="color:grey">Create</button>
+				<button type="submit" class="btn btn-warning" style="color:grey"><a href='./phpqrcode/index.php?genButton=stamp'>Create</a></button>
 			</div>
 		</div>
 		</p>

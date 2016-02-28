@@ -35,7 +35,7 @@ class Model {
 		$this->qrticketsDAO = $this->DAO_Factory->getQRTicketsDAO();
 		$this->notificationsDAO = $this->DAO_Factory->getNotificationsDAO();
 		$this->authenticationFactory = new authentication_factory ( $this->customersDAO, $this->employeesDAO );
-		$this->validationFactory = new validation_factory ( $this->customersDAO , $this->employeesDAO );
+		$this->validationFactory = new validation_factory ( $this->customersDAO , $this->employeesDAO ,$this->qrticketsDAO );
 		$this->appName = APP_NAME;
 
 	}
@@ -129,6 +129,18 @@ class Model {
 	}
 	
 	
+	public function createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID){
+		return ($this->qrticketsDAO->insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID));
+	}
+
+	public function createStamp($destination,$weight,$type,$stampID,$userPO){
+		return ($this->qrticketsDAO->insertIntoStampTable($destination,$weight,$type,$stampID,$userPO));
+	}
+
+	public function insertIntoQRTable($qrType,$stampID){
+		return ($this->qrticketsDAO->insertIntoQRTable($qrType,$stampID));
+	}
+
 	
 	public function prepareIntroMessage() {
 		/*
