@@ -17,6 +17,9 @@
 				case "createPostStamp":
 					$this->createStamp($parameters);
 					break;
+				case "createCarTicket":
+					$this->createParkingTicket();
+					break;
 				case "deleteCustomer" : 
 					$this->deleteCustomer($parameters);
 					break;
@@ -44,8 +47,8 @@
 				case "updateUserForm" : 
 					$this->updateUserForm($parameters);
 					break;
-				case "transferMoney" : 
-					$this->transferMoney($parameters);
+				case "updateParkingTicket" : 
+					$this->updateParkingTicket($parameters);
 					break;
 				case "insertNewRecord":
 					$this->insertNewRecord($parameters);
@@ -86,6 +89,7 @@
 			$this->model->getAllIssues();
 			$this->model->getAllEmployees();
 			$this->model->getUserDetails();
+			$this->model->getEmployeeDetails();
 			#$this->model->search($parameters);
 		}
 		
@@ -205,8 +209,42 @@
 			$this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation);
 		}
 
-		function createParkingTicket($parameters){
-			return true;
+		function createParkingTicket(){
+			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
+			$dateOfCreation = date('Y/m/d h:i:s');
+			$ticketID = $this->model->validationFactory->qrcodeIDGenerator();
+			$qrType = "CPARK";
+			$password = $parameters['fPassword'];
+			$hashedPassword = $this->model->authenticationFactory->getHashValue($password);
+			$dbpassword = $this->model->authenticationFactory->passwordOfUserLoggedIn();
+				
+			if($hashedPassword == $dbpassword)
+				if($this->model->insertIntoQRTable($qrType,$ticketID))
+					if($this->model->createParkingTicket($ponumber,$dateOfCreation,$ticketID))
+						include_once'./callQRGenerator.php';
+				
+		}
+
+		function updateParkingTicket($parameters){
+			$option = $parameters['topUpUsing'];
+			$amount = $parameters['amount'];
+			$duration = $parameters['duration'];
+
+			/**
+				WORKING OFF THE ASSUMPTION 1EURO = 1 HOUR;
+			*/
+
+			if(! empty($option)){
+				if($option == "1"){ // TOP UP BY DURATION
+					//
+				}
+				else if($option == "2"){ // TOP UP BY AMOUNT
+					//
+				}else{
+					//
+				}
+
+			}
 		}
 
 		function createStamp($parameters){
@@ -216,14 +254,19 @@
 			$type = $parameters["type"];
 			$qrType = "STAMP";
 			$stampID = $this->model->validationFactory->qrcodeIDGenerator();
-			$dateCreated = date('Y/m/d');
-			$userPO = $this->model->authenticationFactory->getPONumberLoggedIn();
+			$dateCreated = date('Y/m/d h:i:s');
+			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
+			$password = $parameters["fPassword"];
+			$hashedPassword = $this->model->authenticationFactory->getHashValue($password);
 
+			$dbpassword = $this->model->authenticationFactory->passwordOfUserLoggedIn();
+						
+			if($hashedPassword == $dbpassword)
+				if($this->model->insertIntoQRTable($qrType,$stampID))
+					if($this->model->createStamp($destination,$weight,$type,$stampID,$ponumber))
+						include_once './callQRGenerator.php';
 
-			if($this->model->insertIntoQRTable($qrType,$stampID)){
-				$this->model->createStamp($destination,$weight,$type,$stampID,$userPO);
-				// Code to call Download for the QR page.
-			}
+							
 		}
 
 		function makeOrder($parameters){

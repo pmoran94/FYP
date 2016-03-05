@@ -31,6 +31,7 @@ class View {
 		$registerButton = file_get_contents('./templates/registrationButton.php');
 		$loggedInUserActions = file_get_contents('./templates/loggedInUserActions.php');
 		$issueReport = file_get_contents('./templates/reportIssue.php');
+		$employee_issueReport = file_get_contents('./templates/employee_reportIssue_form.php');
 		$makeOrder = file_get_contents('./templates/makeOrder.php');
 		$loggedInAdminActions = file_get_contents('./templates/loggedInAdminActions.php');
 		$deleteEmployee = file_get_contents('./templates/delete_employee.php');
@@ -42,19 +43,24 @@ class View {
 		$loginBar = file_get_contents('./templates/loginaBar.php');
 		$emailsForm = file_get_contents('./templates/inviteEmails_form.php');
 		$stampForm = file_get_contents('./templates/postalStampForm.php');
+		$parkingForm = file_get_contents('./templates/parkingTicketForm.php');
+		$download = file_get_contents('./download_header.php');
 
 
 		$authenticationErrorMessage = "";
 		$leftBox = "";
+		$empLeftBox= "";
 		$rightBox = "";
 		$middleBox = "";
 		$introTop="";
 		$confirmationMessage = "";
 		$displayTables = "";
 		$tableChoice = null;
+		$var_loggedIn = $this->model->loginStatusString;
+		$var = "";
 
 		
-		if ($this->model->loginStatusString != null) {
+		if ($var_loggedIn != null) {
 				
 				$username = $this->model->authenticationFactory->getUsernameLoggedIn();
 				$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
@@ -63,69 +69,82 @@ class View {
 				
 				$var = $this->model->authenticationFactory->isUserEmployee();
 				
-				if(! $var == null){
+				if( $var != null){
 					if($this->model->isUserLoggedInAdmin()){
-						$newVar = "<h2 style='color:red;size:20'>You are an Admin</h2>";
 						//$introTop = $username . " : " . $empnumber;
-						
-						if(isset($_POST["registerAdmin"])){
-							$rightBox = $registrationAdminForm;
-						}
-						else if( isset($_POST["deleteAdmin"])){
-							$rightBox = $deleteEmployee;
-						}
-						else if( isset($_POST["deleteCustomer"])){
-							$rightBox = $deleteCustomer;
-						}
-						else if(isset($_POST["changePin"])){
-							$rightBox = $changePinForm;
-						}
-						else
-							$rightBox = "<img src='./images/cus1.jpe' alt='Admin'>"  . $newVar  ;
+						$admLink;
 						
 					}else
-						$newVar = "<h2 style='color:red;size:20'>You are an Employee</h2>";
-						//$introTop = $username . " : " . $empnumber;
-						$rightBox = "<img src='./images/cus1.jpe' alt=''>"  . $newVar  ;
+						if (! empty($_GET['empButton'])) $empLink = $_GET['empButton'];
+						else $empLink = "";
+
+						if($empLink == 'liopenScanner'){
+
+							// either open scanner on view
+							// or display
+
+						}
+						else if($empLink == 'lireportIssue'){
+							$empLeftBox = $employee_issueReport;
+						}
+						else if($empLink == 'liPassChange'){
+							$empLeftBox = $changePinForm;
+						}
+						else if($empLink == ''){
+
+						}
+						
 				}
 				else
-					$newVar = "<h2 style='color:red;size:20'>You are a Customer - </h2>";
 			
 
 					$introTop = $username . " : " . $ponumber;
+
+					$link;
+					$link2;
 					
-					$link=$_GET['button'];
-					if (empty($link)) $link = '';
+					if (! empty($_GET['button'])) $link = $_GET['button'];
+					else $link = "";
 
-					if($link == 'liReport'){
-						$leftBox = $issueReport;
+					
+
+					if(! isset($_POST['submitStamp']) && ! isset($_POST['submitCPark'])){
+						if($link == 'liReport'){
+							$leftBox = $issueReport;
+						}
+						else if($link=='liCreateEvent'){
+							$leftBox = $emailsForm;
+						}
+						else if($link == 'liCreateStamp'){
+							$leftBox = $stampForm;
+						}
+						else if($link == 'liCreateParkTicket'){
+							$leftBox = $parkingForm;
+						}
+						else if($link =='liPassChange'){
+							$leftBox = $userChangePassword;
+						}
+						else if($link == 'topUpParkingTicket'){
+							$leftBox = $topUpParkingTicketForm;
+						}
+						else if($link == 'liEditInfo'){
+							$leftBox = $updateCustomerForm;
+						}
+						else{
+							$leftBox = "" ;
+						}
 					}
-					else if($link=='liCreateEvent'){
-						$leftBox = $emailsForm;
-					}
-					else if($link == 'liCreateStamp'){
-						$leftBox = $stampForm;
-					}
-					else if($link =='liPassChange'){
-						$leftBox = $userChangePassword;
-					}
-					else if($link == 'topUpParkingTicket'){
-						$leftBox = $topUpParkingTicketForm;
-					}
-					else if($link == 'liEditInfo'){
-						$leftBox = $updateCustomerForm;
-					}
-					else{
-						$leftBox = "" ;
+					else
+					{
+						// TODO
+						// Check if insert into appropriate table has been successfull
+						
+						$leftBox = $download; 
 					}
 
-				// list of options available to logged in user
-					$rightBox = $newVar  ;
 
 
-				$middleBox = $loggedInUserActions;
-
-
+					/*
 				if(! $var == null){
 					if($this->model->isUserLoggedInAdmin()){
 						$introTop = $username . " : " . $empnumber;
@@ -138,8 +157,20 @@ class View {
 				else{
 					$introTop = $username . " : " . $ponumber;
 					include_once'./templates/template_index.php';
-				}
+				}*/
 				
+				if($var !=null && $this->model->isUserLoggedInAdmin()){
+					$introTop = $username . " : " . $empnumber;
+					include_once'./templates/template_index_admin.php';
+				}
+				else if($var !=null && !$this->model->isUserLoggedInAdmin()){
+					$introTop = $username . " : " . $empnumber;
+					include_once'./templates/template_index_employee.php';
+				}
+				else {
+					$introTop = $username . " : " . $ponumber;
+					include_once'./templates/template_index.php';
+				}
 		}
 		// The  Admin view has be completely taken out here
 		else {
@@ -151,10 +182,11 @@ class View {
 			
 			if ($this->model->hasAuthenticationFailed)
 				$authenticationErrorMessage = $this->model->authenticationErrorMessage;
-		
+				
 
-			$link = $_GET['buttonLogin'];
-			if (empty($buttonLogin)) $buttonLogin = '';
+			if(! empty($_GET['buttonLogin'])) $link = $_GET['buttonLogin'];
+			else $link = "";
+
 
 			if($link == 'registerbutton' ){
 				$middleBox = $registrationForm ; 
@@ -167,11 +199,30 @@ class View {
 			$leftBox = "<img src='./images/envelope.png' alt='envelope'>";
 
 			
+			/*
+			if( $var_loggedIn == null){
+				include_once ("templates/template_index_login.php");
+			}
+			else{
+				if($var == null){
+					if($this->model->isUserLoggedInAdmin()){
+						$introTop = $username . " : " . $empnumber;
+						include_once'./templates/template_index_admin.php';
+					}
+					else{
+						$introTop = $username . " : " . $empnumber;
+						include_once'./templates/template_index_employee.php';
+					}
+				}
+				else{
+					$introTop = $username . " : " . $ponumber;
+					include_once'./templates/template_index.php';
+				}
 
+
+			}*/
 
 			include_once ("templates/template_index_login.php");
-
-
 			/*
 			if (! isset ( $this->model->hasRegistrationFailed )) {
 				$rightBox = $registrationForm;

@@ -17,7 +17,7 @@ include_once 'validation_factory_admin.php';
 class Model {
 	public $DAO_Factory,$adminValidationFactory,$adminAuthenticationFactory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allUsers="",$allIssues="",$allEmployees="",
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allUsers="",$allIssues="",$allEmployees="",
 	$searchResults=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
@@ -106,9 +106,25 @@ class Model {
 	*/
 
 	public function getUserDetails(){
-		$uid = $_SESSION['user_id'];
+
+		$uid;
+
+		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
+		else $uid = "";
+
 		$this->userDetails = $this->customersDAO->getUserDetails($uid);
 	}
+
+	public function getEmployeeDetails(){
+
+		$uid;
+
+		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
+		else $uid = "";
+
+		$this->employeeDetails = $this->employeesDAO->getEmployeeDetails($uid);
+	}
+
 	
 	public function getAllUsers(){
 	
@@ -135,6 +151,10 @@ class Model {
 
 	public function createStamp($destination,$weight,$type,$stampID,$userPO){
 		return ($this->qrticketsDAO->insertIntoStampTable($destination,$weight,$type,$stampID,$userPO));
+	}
+
+	public function createParkingTicket($userID,$dateOfCreation,$ticketID){
+		return ($this->qrticketsDAO->insertIntoParkingTable($userID,$dateOfCreation,$ticketID));
 	}
 
 	public function insertIntoQRTable($qrType,$stampID){

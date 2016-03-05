@@ -22,7 +22,7 @@
 						<div class="collapse navbar-collapse" id="navBar1">
 							<ul class="nav nav-tabs">
 								<li><a href="#" class="" id="toggle-menu">
-									<span class="caret"></span>
+									<span class="glyphicon glyphicon-th-list"></span>
 									</a>
 								</li>
 								
@@ -66,7 +66,7 @@
 		</ul>
 		<p>Find me on:</p>
 		<div style="padding-left:5em">
-			<a href="#"><span class="glyphicon glyphicon-facebook"></span></a>
+			<a href="#"><span style="background-color: blue"class="glyphicon glyphicon-facebook"></span></a>
 			<a href="#"><span class="glyphicon glyphicon-github"></span></a>
 			<a href="#"><span class="glyphicon glyphicon-linkedin"></span></a>
 			<a href="#"><span class="glyphicon glyphicon-twitter"></span></a>
@@ -87,32 +87,47 @@
 					</div>
 				</div>
 
-				<div class="col-lg-8 tab-content" style="background-color:lavender; background:rgba(255,255,255,0.3)">
+				<div class="col-lg-8 tab-content"  style="background-color:lavender; background:rgba(255,255,255,0.3)">
 					<!--div class=''-->
-						<?php echo "<h2 class='text-center'>" . $introTop . "</h2>"; 
+						<?php echo "<h2 class='text-center'>" . $introTop . "</h2>";
+						echo "<div style='text-align:center'>" ;
 						echo	"<form method='post' index=''>";
 
 
 						echo 	"<div class='tab-pane fade in active' id='stampdiv'>";
-						echo 	"<button class='btn-info' type='button' style='margin-left:40%' name='postalStamp'>  <a href='?button=liCreateStamp'>Generate Postal Stamp</a></button>";
+						echo 	"<button class='btn-large btn-info' type='button' name='postalStamp'>  <a href='?button=liCreateStamp'>Generate Postal Stamp</a></button>";
 						echo	"</div>";
 
-
+						/*
 						echo	"<div class='tab-pane fade' id='cparkdiv'>";
 						echo	"<button class='btn-info' type='button' style='margin-left:40%' name='cparking'> <a href='./phpqrcode/index.php?genButton=cpark&ponumber=$ponumber'>Generate Parking Ticket</a></button>";
+						echo	"</div>";*/
+						
+
+						
+						echo	"<div class='tab-pane fade' id='cparkdiv'>";
+						echo	"<button class='btn-large btn-info' type='button' name='cparking'> <a href='?button=liCreateParkTicket'>Generate Parking Ticket</a></button>";
 						echo	"</div>";
 
+						
 
 						echo	"<div class='tab-pane fade' id='eventdiv'>";
-						echo	"<button class='btn-info' type='button' style='margin-left:40%' name='events'> <a href='?button=liCreateEvent'>Create Event</a></button>";
+						echo	"<button class='btn-large btn-info' type='button' name='events'> <a href='?button=liCreateEvent'>Create Event</a></button>";
 						echo	"</div>";
 
 
 						echo	"</form>";
+						echo  "</div>";
 						?>
 					<!--/div-->
 					<?php
-						$userDropMenu = $_GET['userValue'];
+
+						$userDropMenu;
+						
+						if (! empty($_GET['userValue'])) $userDropMenu = $_GET['userValue'];
+						else $userDropMenu = "";
+
+						
 
 						if( isset($userDropMenu))
 							if($userDropMenu=='viewDetails')

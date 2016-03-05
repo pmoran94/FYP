@@ -111,6 +111,14 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 	}
 
+	public function insertIntoParkingTable($userID,$dateOfCreation,$ticketID){
+		$sqlQuery = "INSERT into parkingtickets(ponumber,date_issued,ticketID) ";
+		$sqlQuery .= "VALUES ('$userID','$dateOfCreation','$ticketID' ) ";
+
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
+
 	public function insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID){
 		$sqlQuery = "INSERT into events(creator_id,nameOfEvent,eventDesc,dateOfEvent,eventLocation,no_of_invites,inviteType,eventID) ";
 		$sqlQuery .= "VALUES ('$eventCreator','$eventName','$eventDesc','$eventDate','$eventLoc','$noOfInvites','$inviteType','$eventID') ";

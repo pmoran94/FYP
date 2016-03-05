@@ -1,3 +1,6 @@
+<html>
+<head>
+</head>
 <form action="index.php" class="ws-validate" method="post">
 
 	<fieldset>
@@ -8,10 +11,10 @@
 					<td>
 						<label for="destination">Destination</label>
 							<select name="destination" required>
-								<option value="Zone1">Ireland&NI</option>
-								<option value="Zone2">Great Britain</option>
-								<option value="Zone3">Europe</option>
-								<option value="Zone4">Rest of World</option>
+								<option value="Ireland">Ireland&NI</option>
+								<option value="GB">Great Britain</option>
+								<option value="Europe">Europe</option>
+								<option value="Other">Rest of World</option>
 							</select>
 					</td>
 					<td>
@@ -48,14 +51,62 @@
 		<p>
 		<div class="form-group">
 			<div class="controls">
-				<button type="submit" class="btn btn-warning" style="color:grey">Create</button>
+				<a href="javascript:toggle();" name="displayText"><button type="button" id='prompt'  class="btn btn-warning" style="color:grey">Next</button></a>
 			</div>
 		</div>
 		</p>
+		<div id="toggleText" style="display: none"> 
+		<legend>
+		<fieldset>
+
+			<br>
+			<p style="color:red">Confirm Password</p>
+
+				<input type="password" id="fPassword" name="fPassword"
+					maxlength="20" style="height:40px;width:100%"  required class="form-control" placeholder="Verify Password">
+
+			<br>
+			<button type="submit" class="btn btn-primary" name="submitStamp" >Confirm</button></a>
+
+		</fieldset>
+		</legend>
+		</div>
 	</fieldset>
 </form>
-<script type="text/javascript">
-	
-	// select the relevant <input> elements, and using on() to bind a change event-handler:
+</html>
 
+
+
+
+<script src="bootbox.min.js"></script>
+<script>
+
+	function toggle() {
+		var ele = document.getElementById("toggleText");
+		var text = document.getElementById("displayText");
+		if(ele.style.display == "block") {
+	    		ele.style.display = "none";
+			text.innerHTML = "show";
+	  	}
+		else {
+			ele.style.display = "block";
+			text.innerHTML = "hide";
+		}
+	} 
+
+	//<a href="javascript:toggle();" name="displayText">
+
+	/*
+
+	$(document).on("click", "#prompt", function(e) {
+        bootbox.prompt("What is your name?", function(result) {                
+		if (result === null) {                                             
+			Example.show("Prompt dismissed");                              
+		} else {
+		    Example.show("Hi <b>"+result+"</b>");                          
+		}
+		})
+    });*/
+	
 </script>
+

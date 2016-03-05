@@ -82,11 +82,8 @@ class employeesDAO extends BaseDAO {
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 
 
-		if ($result[0]["is_admin"] == 'yes'){
-			 return (true);}
-
-		else {
-			return (false);}
+		if ($result[0]["is_admin"] == 'yes') return (true);
+		else return (false);
 
 	}
 
@@ -153,6 +150,17 @@ class employeesDAO extends BaseDAO {
 		return $result; 
 	}
 	
+	public function getEmployeeDetails($uid){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM employees ";
+		$sqlQuery .= "WHERE e_id='$uid' ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+			
+		return $result;
+
+	}
+
 	public function deleteEmp($empNum){
 		$sqlQuery = "DELETE FROM employees ";
 		$sqlQuery .= "WHERE emp_no = '$empNum' ";		
