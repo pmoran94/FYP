@@ -72,9 +72,43 @@ class View {
 				if( $var != null){
 					if($this->model->isUserLoggedInAdmin()){
 						//$introTop = $username . " : " . $empnumber;
-						$admLink;
+						$adLink;
+						if(! empty($_GET['adButton'])) $abLink = $_GET['adButton'];
+						else $adLink ="";
+
+						if($adLink == 'viewCustIssues'){
+
+						}
+						else if($adLink == 'viewEmpIssues'){
+
+						}
+						else if($adLink =='viewAllCust'){
+
+						}
+						else if($adLink =='viewAllEmp'){
+
+						}
+						else if($adLink =='viewAllAdmins'){
+
+						}
+						else if ($adLink =='viewAllQRs'){
+
+						}
+						else if($adLink =='viewAllEvents'){
+
+						}
+						else if($adLink =='viewAllStamps'){
+
+						}
+						else if($adLink =='viewAllParking '){
+
+						}
+
 						
 					}else
+
+
+						$empLink;
 						if (! empty($_GET['empButton'])) $empLink = $_GET['empButton'];
 						else $empLink = "";
 
