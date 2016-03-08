@@ -26,7 +26,6 @@ class View {
 		$registrationAdminForm = file_get_contents('./templates/insert_new_admin_form.php',FILE_USE_INCLUDE_PATH);
 		$updateRecordForm = file_get_contents('./templates/update_record_form.php');
 		$newRecordForm = file_get_contents('./templates/insert_new_record.php');
-		$customersTable = file_get_contents('./templates/view_users.php');
 		$searchForm = file_get_contents('./templates/search_form.php');
 		$registerButton = file_get_contents('./templates/registrationButton.php');
 		$loggedInUserActions = file_get_contents('./templates/loggedInUserActions.php');
@@ -76,33 +75,6 @@ class View {
 						if(! empty($_GET['adButton'])) $abLink = $_GET['adButton'];
 						else $adLink ="";
 
-						if($adLink == 'viewCustIssues'){
-
-						}
-						else if($adLink == 'viewEmpIssues'){
-
-						}
-						else if($adLink =='viewAllCust'){
-
-						}
-						else if($adLink =='viewAllEmp'){
-
-						}
-						else if($adLink =='viewAllAdmins'){
-
-						}
-						else if ($adLink =='viewAllQRs'){
-
-						}
-						else if($adLink =='viewAllEvents'){
-
-						}
-						else if($adLink =='viewAllStamps'){
-
-						}
-						else if($adLink =='viewAllParking '){
-
-						}
 
 						
 					}else

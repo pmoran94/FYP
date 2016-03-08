@@ -10,15 +10,12 @@ include_once './conf/config.inc.php';
 include_once './db/DAO_factory.php';
 include_once 'validation_factory.php';
 include_once 'authentication_factory.php';
-include_once 'authentication_factory_admin.php';
-include_once 'validation_factory_admin.php';
 
 
 class Model {
-	public $DAO_Factory,$adminValidationFactory,$adminAuthenticationFactory, $validationFactory, $authenticationFactory,$dataHandler; // factories
+	public $DAO_Factory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allUsers="",$allIssues="",$allEmployees="",
-	$searchResults=""; // strings
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",	$searchResults=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
 	
@@ -105,6 +102,19 @@ class Model {
 		OTHER METHODS TO BE FIXED
 	*/
 
+	public function getAllStamps(){
+		$this->allStamps = $this->qrticketsDAO->getAllStamps();
+	}
+	public function getAllParkingTickets(){
+		$this->allCParkTickets = $this->qrticketsDAO->getAllParkingTickets();
+	}
+	public function getAllEvents(){
+		$this->allEvents = $this->qrticketsDAO->getAllEvents();
+	}
+	public function getInviteesForEvent($ev_Id){
+		$this->allInviteesForEvent = $this->qrticketsDAO->getInviteesForEvent($ev_Id);
+	}
+
 	public function getUserDetails(){
 
 		$uid;
@@ -126,16 +136,19 @@ class Model {
 	}
 
 	
-	public function getAllUsers(){
+	public function getAllCustomers(){
 	
-		$this->allUsers =  $this->customersDAO->getAllUsers();
+		$this->allCustomers =  $this->customersDAO->getAllCustomers();
 	}
 	
 	//public function getAllOrders(){
 //		$this->allOrders = $this->qrticketsDAO->getAllOrders();
 	//}
-	public function getAllIssues(){
-		$this->allIssues = $this->notificationsDAO->getAllIssues();
+	public function getAllCustomerIssues(){
+		$this->allCustomerIssues = $this->notificationsDAO->getAllCustomerIssues();
+	}
+	public function getAllEmployeeIssues(){
+		$this->allEmployeeIssues = $this->notificationsDAO->getAllEmployeeIssues();
 	}
 	public function getAllEmployees(){
 		$this->allEmployees = $this->employeesDAO->getAllEmployees();
@@ -153,8 +166,22 @@ class Model {
 		return ($this->qrticketsDAO->insertIntoStampTable($destination,$weight,$type,$stampID,$userPO));
 	}
 
-	public function createParkingTicket($userID,$dateOfCreation,$ticketID){
-		return ($this->qrticketsDAO->insertIntoParkingTable($userID,$dateOfCreation,$ticketID));
+	public function createParkingTicket($userID,$dateOfCreation,$ticketID,$initialExpiryTime){
+		return ($this->qrticketsDAO->insertIntoParkingTable($userID,$dateOfCreation,$ticketID,$initialExpiryTime));
+	}
+
+	public function checkForActiveTicket($ponumber){
+		return($this->qrticketsDAO->getParkingTicketForUser($ponumber));
+	}
+	public function deactivateExistingParkingTicket($ponumber){
+		return($this->qrticketsDAO->deactivateExistingParkingTickets($ponumber));
+	}
+
+	public function getCurrentExpiryTimeToUpdate($ponumber){
+		return($this->qrticketsDAO->getCurrentExpiryTime($ponumber));
+	}
+	public function updateParkingExpiryTime($newExpiry,$ponumber,$currentTime){
+		return($this->qrticketsDAO->updateParkingTicket($newExpiry,$ponumber,$currentTime));
 	}
 
 	public function insertIntoQRTable($qrType,$stampID){

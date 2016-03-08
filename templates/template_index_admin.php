@@ -73,17 +73,9 @@
 				<div style="width:100%;height:80px">
 					<?php echo "<h2 class='text-center'>" . $introTop . "</h2>";?>		
 				</div>
-				<div class="col-lg-1">
+				<div class="col-lg-2">
 				</div>
-				<div class="col-lg-5 text-left">
-					<div class='jumbotron'>
-						<?php
-								//include_once "./BarcodeTest.php" ;
-							echo $empLeftBox;
-						?>
-					</div>
-				</div>
-				<div class="col-lg-5">
+				<div class="col-lg-8">
 					<?php 
 						$userDropMenu;
 						
@@ -97,13 +89,40 @@
 								include_once 'employeeDetails.php';
 							else if($userDropMenu=='editDetails')
 								include_once 'editEmployeeDetails.php';
+							else if($userDropMenu == 'viewCustIssues'){
+								include_once 'viewCustomer_issues.php';
+							}
+							else if($userDropMenu == 'viewEmpIssues'){
+								include_once 'viewEmployee_issues.php';
+							}
+							else if($userDropMenu =='viewAllCust'){
+								include_once 'view_customers.php';
+							}
+							else if($userDropMenu =='viewAllEmp'){
+								include_once 'view_employees.php';
+							}
+							else if($userDropMenu =='viewAllAdmins'){
+								include_once '';
+							}
+							else if ($userDropMenu =='viewAllQRs'){
+								include_once '';
+							}
+							else if($userDropMenu =='viewAllEvents'){
+								include_once 'view_events.php';
+							}
+							else if($userDropMenu =='viewAllStamps'){
+								include_once 'view_stamps.php';
+							}
+							else if($userDropMenu =='viewAllParking '){
+								include_once 'view_parkingtickets.php';
+							}
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
 						echo $middleBox ;
 					?>
 					
 				</div>
-				<div class="col-lg-1">
+				<div class="col-lg-2">
 				</div>
 			</div>
 	</div>

@@ -3,7 +3,7 @@
 include_once './db/simple_db_manager.php';
 
 echo "<div ><h3>Employees</h3></div>";
-echo "<div style='overflow:auto;height:200px'>";
+echo "<div style='overflow:auto;height:100%'>";
 echo "<table class= 'table table-hover ' border='1' style='text-align:left; background-color:skyblue; color:black; margin:0px'>";
 echo "<thead style='background-color:cyan'>";
 echo "<tr>
@@ -12,8 +12,8 @@ echo "<tr>
 <th>Is Admin:   </th>
 <th>DoB:   </th>
 <th>Mobile:   </th>
-<th>Email:   </th>
 <th>Address:   </th>
+<th>Email:   </th>
 <th>Employee No.:   </th>
 <th>Date Started:   </th>
 </tr>";
@@ -29,7 +29,7 @@ foreach ($this->model->allEmployees as $row){
 	echo "<td>" . $row ['address'] . "</td>";
 	echo "<td>" . $row ['email'] . "</td>";
 	echo "<td>" . $row ['emp_no'] . "</td>";
-	echo "<td>" . $row ['date_started'] . "</td>";
+	echo "<td>" . $row ['date_employed'] . "</td>";
 
 	echo "</tr>";
 }

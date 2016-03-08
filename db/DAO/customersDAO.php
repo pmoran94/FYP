@@ -169,7 +169,7 @@ class customersDAO extends BaseDAO {
 		if (!empty($result[0]["username"])) return ($result[0]["username"]);
 		else return (false);
 	}
-	public function getAllUsers(){
+	public function getAllCustomers(){
 	
 		$sqlQuery = "SELECT id,CONCAT(fname,' ',sname) AS username,cmobile,cemail,caddr,cpassword,ponumber,ac_amount,date_joined ";
 		$sqlQuery .= "FROM customers ";

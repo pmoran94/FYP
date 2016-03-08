@@ -190,7 +190,8 @@ body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 20px;
-	background-image:url('./../images/bg_white2.jpg');	
+	/*background-image:url('./../images/bg_white2.jpg');*/
+	background-color:#E0E0E0;	
 	background-size:cover;
 	background-repeat:no-repeat; 
 }

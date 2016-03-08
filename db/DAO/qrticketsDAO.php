@@ -25,13 +25,28 @@ class qrticketsDAO extends BaseDAO {
 		return true;
 	}
 	public function getAllStamps(){
-		return true;
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM stamps ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		return $result; 
 	}
 	public function getAllParkingTickets(){
-		return true;
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		return $result;
 	}
 	public function getAllEvents(){
-		return true;
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM events ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		return $result;
 	}
 	public function getAllInviteesForEvent(){
 		return true;
@@ -39,11 +54,46 @@ class qrticketsDAO extends BaseDAO {
 	public function getAllEventsForUser(){
 		return true;
 	}
-	public function getParkingTicket(){
-		return true;
+	public function getParkingTicketForUser($ponumber){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ponumber='$ponumber' AND active='yes' ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		if ($result != NULL) return true;
+			return (false);
 	}
-	public function updateParkingTicket(){
-		return true;
+	public function deactivateExistingParkingTickets($ponumber){
+		$sqlQuery = "UPDATE parkingtickets ";
+		$sqlQuery .="SET active='no' ";
+		$sqlQuery .="WHERE ponumber='$ponumber' ";
+
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+
+		return $result;
+	}
+
+	public function getCurrentExpiryTime($ponumber){
+		$sqlQuery = "SELECT date_of_expiry ";
+		$sqlQuery .="FROM parkingtickets ";
+		$sqlQuery .="WHERE ponumber='$ponumber' AND active='yes' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if ($result != NULL) return $result[0]["date_of_expiry"];
+		return (NULL);
+	}
+
+	public function updateParkingTicket($newExpiry,$ponumber,$currentTime){
+		//'{$date->format('Y-m-d H:i:s')}'"
+		$sqlQuery = "UPDATE parkingtickets ";
+		$sqlQuery .= "SET date_of_expiry='$newExpiry',timeOfLastPayment='$currentTime' ";
+		$sqlQuery .= "WHERE ponumber='$ponumber' AND active='yes' ";
+
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+
+		return $result;
 	}
 
 	public function isQRCodeScannedValid($poNum){
@@ -111,9 +161,9 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 	}
 
-	public function insertIntoParkingTable($userID,$dateOfCreation,$ticketID){
-		$sqlQuery = "INSERT into parkingtickets(ponumber,date_issued,ticketID) ";
-		$sqlQuery .= "VALUES ('$userID','$dateOfCreation','$ticketID' ) ";
+	public function insertIntoParkingTable($userID,$dateOfCreation,$ticketID,$initialExpiryTime){
+		$sqlQuery = "INSERT into parkingtickets(ponumber,date_issued,ticketID,date_of_expiry) ";
+		$sqlQuery .= "VALUES ('$userID','$dateOfCreation','$ticketID','$initialExpiryTime' ) ";
 
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 		return $result;
@@ -127,7 +177,6 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 
 	}
-
 
 }
 ?>

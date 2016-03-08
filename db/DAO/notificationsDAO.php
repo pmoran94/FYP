@@ -7,16 +7,24 @@ class notificationsDAO extends BaseDAO{
 	}
 	
 	
-	public function getAllIssues(){
+	public function getAllCustomerIssues(){
 	
-		$sqlQuery = "SELECT id,name,ponumber,subject,content,date_ ";
+		$sqlQuery = "SELECT name,ponumber,subject,content,date_ ";
 		$sqlQuery .= "FROM notifications ";
 		
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 		
 		return $result; 
 	}
+	public function getAllEmployeeIssues(){
 	
+		$sqlQuery = "SELECT emp_id,customer_,subject,content,date_ ";
+		$sqlQuery .= "FROM notifications ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		return $result; 
+	}
 	public function deleteRecord($mID){
 		$sqlQuery = "DELETE FROM notifcations ";
 		$sqlQuery .= "WHERE id = '$mID' ";		

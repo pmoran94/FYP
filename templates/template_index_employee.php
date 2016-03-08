@@ -30,7 +30,8 @@
 										<li><a href="?eUserValue=editDetails"><span class="glyphicon glyphicon-cog"></span>Edit Profile</a></li>
 									</ul>
 								</li>
-								<li class=""><a href='?empButton=liopenScanner'>____Open Scanner____</a></li>
+								<li class=""><a href='?empButton=liopenScanner'>___Open Parking Data___</a></li>
+								<li class=""><a href='#'></a></li>
 								<li class=""><a href='?empButton=lireportIssue'>Report Issue</a></li>
 								<li class=""><a href='?empButton=liPassChange' name="changePass">Change Pin</a></li>
 							</ul>

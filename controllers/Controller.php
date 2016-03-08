@@ -18,7 +18,7 @@
 					$this->createStamp($parameters);
 					break;
 				case "createCarTicket":
-					$this->createParkingTicket();
+					$this->createParkingTicket($parameters);
 					break;
 				case "deleteCustomer" : 
 					$this->deleteCustomer($parameters);
@@ -85,12 +85,16 @@
 			$this->model->prepareIntroMessage ();
 			//Calling the updateHeader  method, which calls methods from the model to check the login status of the user, and to update that status if needed
 			$this->updateHeader ();
-			$this->model->getAllUsers();
-			$this->model->getAllIssues();
+			$this->model->getAllCustomers();
+			$this->model->getAllCustomerIssues();
+			$this->model->getAllEmployeeIssues();
 			$this->model->getAllEmployees();
 			$this->model->getUserDetails();
 			$this->model->getEmployeeDetails();
 			#$this->model->search($parameters);
+			$this->model->getAllStamps();
+			$this->model->getAllEvents();
+			$this->model->getAllParkingTickets();
 		}
 		
 
@@ -209,7 +213,12 @@
 			$this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation);
 		}
 
-		function createParkingTicket(){
+		function createParkingTicket($parameters){
+
+			if(! empty($parameters['expiryTime'])) $initialExpiryTime = $parameters['expiryTime'];
+			else $initialExpiryTime=date('Y/m/d');
+			
+			
 			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
 			$dateOfCreation = date('Y/m/d h:i:s');
 			$ticketID = $this->model->validationFactory->qrcodeIDGenerator();
@@ -217,34 +226,115 @@
 			$password = $parameters['fPassword'];
 			$hashedPassword = $this->model->authenticationFactory->getHashValue($password);
 			$dbpassword = $this->model->authenticationFactory->passwordOfUserLoggedIn();
-				
+
 			if($hashedPassword == $dbpassword)
+				if($this->model->checkForActiveTicket($ponumber)) // Only one active car parking ticket permitted per user.	
+					$this->model->deactivateExistingParkingTicket($ponumber);
 				if($this->model->insertIntoQRTable($qrType,$ticketID))
-					if($this->model->createParkingTicket($ponumber,$dateOfCreation,$ticketID))
+					if($this->model->createParkingTicket($ponumber,$dateOfCreation,$ticketID,$initialExpiryTime))
 						include_once'./callQRGenerator.php';
-				
+					
 		}
 
 		function updateParkingTicket($parameters){
+			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
 			$option = $parameters['topUpUsing'];
 			$amount = $parameters['amount'];
 			$duration = $parameters['duration'];
+			$currentTime = date('Y-m-d H-i-s');
+			$currentExpiry = "";
+			$cost = "";
+			
+			$newExpiry="";
+
+			if($this->model->checkForActiveTicket($ponumber))
+				$currentExpiry = $this->model->getCurrentExpiryTimeToUpdate($ponumber);
+			
+
 
 			/**
 				WORKING OFF THE ASSUMPTION 1EURO = 1 HOUR;
 			*/
 
-			if(! empty($option)){
-				if($option == "1"){ // TOP UP BY DURATION
-					//
-				}
-				else if($option == "2"){ // TOP UP BY AMOUNT
-					//
-				}else{
-					//
-				}
 
+			//"UPDATE table SET table.table_date = '{$date->format('Y-m-d H:i:s')}'"
+			// date('Y-m-d H:i',strtotime('+1 hour +20 minutes',strtotime($start)));
+
+	
+				// TOP UP BY DURATION
+			if($duration == "30" || $amount == "30"){
+				$cost = '.5';
+				$newExpiry = date('Y-m-d H:i',strtotime('+30 minutes',strtotime($currentExpiry)));
+			} 
+			else if($duration == "60" || $amount == "60"){
+				$cost = '1.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+1 hour',strtotime($currentExpiry)));
+			}  
+			else if($duration == "90" || $amount == "90"){
+				$cost = '1.5';
+				$newExpiry = date('Y-m-d H:i',strtotime('+1 hour +30 minutes',strtotime($currentExpiry)));
 			}
+			else if($duration == "120" || $amount == "120"){
+				$cost = '2.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+2 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "150" || $amount == "150"){
+				$cost = '2.5';
+				$newExpiry = date('Y-m-d H:i',strtotime('+2 hours +30 minutes',strtotime($currentExpiry)));
+			}
+			else if($duration == "180" || $amount == "180"){
+				$cost = '3.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+3 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "240" || $amount == "240"){
+				$cost = '4.0'; 
+				$newExpiry = date('Y-m-d H:i',strtotime('+4 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "300" || $amount == "300"){
+				$cost = '5.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+5 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "360" || $amount == "360"){
+				$cost = '6.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+6 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "420" || $amount == "420"){
+				$cost = '7.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+7 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "480" || $amount == "480"){
+				$cost = '8.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+8 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "540" || $amount == "540"){
+				$cost = '9.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+9 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "600" || $amount == "600"){
+				$cost = '10.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+10 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "660" || $amount == "660"){
+				$cost = '11.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+11 hours',strtotime($currentExpiry)));
+			}
+			else if($duration == "720" || $amount == "720"){
+				$cost = '12.0';
+				$newExpiry = date('Y-m-d H:i',strtotime('+12 hours',strtotime($currentExpiry)));
+			}else{
+				$cost = "";
+				$newExpiry = $currentExpiry;
+				//
+			}
+
+			/**
+				BEFORE UPDATE ENSURE THAT MONEY HAS BEEN PAID, BUT ALSO ENSURE BEFORE MONEY IS PAID THAT THE DB IS UPDATED
+			*/
+
+			if(! empty($newExpiry))
+				$this->model->updateParkingExpiryTime($newExpiry,$ponumber,$currentTime);
+
+			
 		}
 
 		function createStamp($parameters){
