@@ -6,21 +6,29 @@ include_once 'search_form.php';
 echo "<div><h3>Search Results</h3></div>";
 echo "<div style='overflow:auto;height:200px;'>";
 echo "<table class='table table-striped border='1' style='width:100%; text-align:left; background-color:skyblue; color:black; margin:0px'>";
-echo "<thead style='background-color:cyan'>";
+echo "<thead>";
 echo "<tr>
-<th>ID  </th>
-<th>Name:   </th>
-<th>Description:   </th>
-<th>Rating:   </th>
+<th>Name: </th>
+<th>Email:   </th>
+<th>Mobile:   </th>
+<th>Address:   </th>
+<th>PO Number:   </th>
+<th>Car Reg.:   </th>
+<th>Date Joined:</th>
+<th>Action:  </th>
+
 </tr>";
 echo "</thead>";
 
 
 foreach ($this->model->searchResults as $row){
-	echo "<td>" . $row ['id'] . "</td>";
 	echo "<td>" . $row ['name'] . "</td>";
-	echo "<td>" . $row ['description'] . "</td>";
-	echo "<td>" . $row ['rating'] . "</td>";
+	echo "<td>" . $row ['cemail'] . "</td>";
+	echo "<td>" . $row ['cmobile'] . "</td>";
+	echo "<td>" . $row ['caddr'] . "</td>";
+	echo "<td>" . $row ['ponumber'] . "</td>";
+	echo "<td>" . $row ['carRegistration'] . "</td>";
+	echo "<td>" . $row ['date_joined'] . "</td>";
 	echo "</tr>";
 }
 

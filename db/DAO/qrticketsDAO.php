@@ -7,6 +7,19 @@ class qrticketsDAO extends BaseDAO {
 		parent::BaseDAO($dbMng);
 	}
 
+	public function isEventIDValid($eventID){
+
+		$sqlQuery = "SELECT * FROM events ";
+		$sqlQuery .= "WHERE eventID='$eventID' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result !=null) return true;
+		else return false;
+
+
+	}
+
 	public function insertNewQRCodeTEST($sampleQRTYPE){
 		
 		
@@ -18,12 +31,57 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 	}
 
+	public function IsTicketActive($ticketID){
+		$sqlQuery = "SELECT active ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID' ";
+		$sqlQuery .= "AND active='yes' ";
 
-	
-	public function getAllQRCodesForUser()
-	{
-		return true;
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result != null ) return true;
+		else return false;
 	}
+	public function ticketPaidFor($ticketID){
+		$sqlQuery = "SELECT has_paid ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID' ";
+		$sqlQuery .= "AND has_paid='yes' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result != null ) return true;
+		else return false;
+
+	}
+	public function validExpiry($ticketID){
+		$sqlQuery = "SELECT date_of_expiry ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result > date("Y-m-d H:i:s") ) return true;
+		else return false;
+
+	}
+	
+	public function getAllActiveQRCodesForUser($uid)
+	{
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM events ";
+		$sqlQuery .= "WHERE eventID IN ( ";
+		$sqlQuery .= "SELECT eventID ";
+		$sqlQuery .= "FROM invites ";
+		$sqlQuery .= "WHERE email=$userEmail) ";
+		$sqlQuery .= "UNION ";
+		$sqlQuery .= "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ponumber='$ponumber' AND ";
+		$sqlQuery .= "active='yes' ";
+	}
+
+
 	public function getAllStamps(){
 		$sqlQuery = "SELECT * ";
 		$sqlQuery .= "FROM stamps ";
@@ -51,8 +109,27 @@ class qrticketsDAO extends BaseDAO {
 	public function getAllInviteesForEvent(){
 		return true;
 	}
-	public function getAllEventsForUser(){
-		return true;
+	public function insertIntoInvitesTable($name,$email,$eventID){
+		$sqlQuery = "INSERT into ";
+		$sqlQuery .= "invites (name,email,eventID) ";
+		$sqlQuery .= "VALUES ('$name','$email','$eventID') ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
+	public function getAllEventsForUser($uid,$userEmail){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .="FROM events ";
+		$sqlQuery .="WHERE creator_id='$uid' ";
+		$sqlQuery .="UNION ";
+		$sqlQuery .="SELECT * ";
+		$sqlQuery .="FROM events ";
+		$sqlQuery .="WHERE eventID in ( ";
+		$sqlQuery .="SELECT eventID ";
+		$sqlQuery .="FROM invites ";
+		$sqlQuery .="WHERE email='$userEmail') ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		return $result;
 	}
 	public function getParkingTicketForUser($ponumber){
 		$sqlQuery = "SELECT * ";
@@ -169,9 +246,9 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 	}
 
-	public function insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID){
-		$sqlQuery = "INSERT into events(creator_id,nameOfEvent,eventDesc,dateOfEvent,eventLocation,no_of_invites,inviteType,eventID) ";
-		$sqlQuery .= "VALUES ('$eventCreator','$eventName','$eventDesc','$eventDate','$eventLoc','$noOfInvites','$inviteType','$eventID') ";
+	public function insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation){
+		$sqlQuery = "INSERT into events(creator_id,nameOfEvent,eventDesc,dateOfEvent,eventLocation,no_of_invitees,inviteType,eventID,dateOfCreation) ";
+		$sqlQuery .= "VALUES ('$eventCreator','$eventName','$eventDesc','$eventDate','$eventLoc','$noOfInvites','$inviteType','$eventID','$dateOfCreation') ";
 
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 		return $result;

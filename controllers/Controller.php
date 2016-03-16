@@ -74,8 +74,8 @@
 				case "deleteRecord":
 					$this->deleteRecord($parameters);
 					break;
-				case "search":
-					$this->search($parameters);
+				case "searchCustomers":
+					$this->searchCustomers($parameters);
 					break;
 				default :
 					break;
@@ -91,10 +91,11 @@
 			$this->model->getAllEmployees();
 			$this->model->getUserDetails();
 			$this->model->getEmployeeDetails();
-			#$this->model->search($parameters);
+			//$this->model->searchCustomers();
 			$this->model->getAllStamps();
 			$this->model->getAllEvents();
 			$this->model->getAllParkingTickets();
+			$this->model->getAllEventsForUser();
 		}
 		
 
@@ -116,16 +117,11 @@
 			$this->model->updateUserForm($userId);
 		}
 
-		function search($parameters){
-			$search = $parameters['search'];
-			$this->model->search($search);
+		function searchCustomers($parameters){
+			$search = $parameters['searchValue'];
+			$this->model->searchCustomers($search);
 		}
 		
-		function deleteRecord($parameters){
-			$mID = $parameters ['movie'];
-			$this->model->deleteRecord($mID);
-		
-		}
 		
 		function deleteCustomer($parameters){
 			$email = $parameters['fEmail'];
@@ -194,23 +190,34 @@
 
 		function createEvent($parameters){
 			$eventCreator= $this->model->authenticationFactory->getPONumberLoggedIn();
+
 			$eventName= $parameters["nameOfEvent"];
 			$eventDesc= $parameters["descOfEvent"];
 			$eventDate= $parameters["dateOfEvent"];
 			$eventLoc=$parameters["eventLocation"];
-			$noOfInvites="";
 			$inviteType=$parameters["inviteType"];
-			$eventID=//generate random value (not already in database)
-			$dateOfCreation = date('Y/m/d');
+			$eventID=$this->model->validationFactory->eventIDGenerator();
+			$dateOfCreation = date('Y/m/d H:i:s');
+
 
 			$message = "You are invited to my event!";
 			$subject = "Event invite!";
-			$email = $parameters['emails'];
 			$qrType = "EVENT";
+			$inviteNames = $parameters['names'];
+			$inviteEmail = $parameters['emails'];
+			$noOfInvites = 0;
 
-			//check that the variables are not empty
+			foreach($inviteNames as $index)	
+				$noOfInvites++;
+ 			
+			//if(strtotime($eventDate>$dateOfCreation))
+				if($this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation))
+					foreach($inviteNames as $index=>$name){
+						$this->model->sendInvites($name,$inviteEmail[$index],$eventID);
+						// TODO
+						// Code to send individual emails to invitees
+					}
 
-			$this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation);
 		}
 
 		function createParkingTicket($parameters){
@@ -328,6 +335,9 @@
 			}
 
 			/**
+				TODO
+
+				****
 				BEFORE UPDATE ENSURE THAT MONEY HAS BEEN PAID, BUT ALSO ENSURE BEFORE MONEY IS PAID THAT THE DB IS UPDATED
 			*/
 
@@ -343,7 +353,7 @@
 			$weight = $parameters["weight"];
 			$type = $parameters["type"];
 			$qrType = "STAMP";
-			$stampID = $this->model->validationFactory->qrcodeIDGenerator();
+			$ticketID = $this->model->validationFactory->qrcodeIDGenerator();
 			$dateCreated = date('Y/m/d h:i:s');
 			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
 			$password = $parameters["fPassword"];
@@ -352,8 +362,8 @@
 			$dbpassword = $this->model->authenticationFactory->passwordOfUserLoggedIn();
 						
 			if($hashedPassword == $dbpassword)
-				if($this->model->insertIntoQRTable($qrType,$stampID))
-					if($this->model->createStamp($destination,$weight,$type,$stampID,$ponumber))
+				if($this->model->insertIntoQRTable($qrType,$ticketID))
+					if($this->model->createStamp($destination,$weight,$type,$ticketID,$ponumber))
 						include_once './callQRGenerator.php';
 
 							

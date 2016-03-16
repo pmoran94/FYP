@@ -40,6 +40,16 @@ class validation_factory {
 
 	}
 
+	public function IsTicketActive($ticketID){
+		return($this->qrticketsDAO->IsTicketActive($ticketID));
+	} 
+	public function ticketPaidFor($ticketID){
+		return($this->qrticketsDAO->ticketPaidFor($ticketID));
+	}
+	public function validExpiry($ticketID){
+		return($this->qrticketsDAO->validExpiry($ticketID));
+	}
+
 	public function validPassword($password){
 		$regex = "^                                       
 				(?=(?:.*[A-Z]){2,})                     
@@ -138,7 +148,7 @@ class validation_factory {
 		
 		while($flag == 0){
 
-			$eventID = rand(1000000,9999999);
+			$eventID = rand(10000000,99999999);
 
 			if( $this->qrticketsDAO->isEventIDValid($eventID)){
 				$flag = 0 ;

@@ -19,14 +19,18 @@
 								<span class="icon-bar"></span>
 							</button>
 						</div>
+						<div style='width:100%:height:15%'>
+							<h2 style='font-family:"Lucida Console", Monaco, monospace'><img src='./images/head.jpg' style='height:90px;width:90px;padding-bottom: 5px'>
+							Qr Coding System</h2>
+						</div>
 						<div class="collapse navbar-collapse" id="navBar1">
+
 							<ul class="nav nav-tabs">
 								<li><a href="#" class="" id="toggle-menu">
 									<span class="glyphicon glyphicon-th-list"></span>
 									</a>
 								</li>
-								
-								<!--li><a href="?button=liEditInfo" class="active" >Update Info</a></li-->
+
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown">Profile<span class="caret"></span></a>
 	     							<ul class="dropdown-menu">
@@ -34,8 +38,8 @@
 										<li><a href="?userValue=editDetails"><span class="glyphicon glyphicon-cog"></span> Edit Profile Info.</a></li>
 									</ul>
 								</li>
-								<li class=""><a href='?button=liOrder' name="viewActiveTickets">View Active QR's</a></li>
-								<li class=""><a href='?button=liTopUp' name="topUp">MyStripe</a></li>
+								<li class=""><a href='?button=liOrder' name="viewActiveTickets">View Active QR's&nbsp&nbsp<span class='glyphicon glyphicon-qrcode'></span></a></li>
+								<li class=""><a href='?button=liTopUp' name="topUp">MyStripe<span class='glyphicon glyphicon-euro'></span></a></li>
 								<li class=""><a href='?button=liReport' name="reportIssue">Report Issue</a></li>
 								<li class=""><a href='?button=liPassChange' name="changePass">Change Password</a></li>
 							</ul>
@@ -54,35 +58,25 @@
 		<div id="screenTop">
 		</div>
 
-	<div id="sidebar" style="margin-top:2%">
+	<div id="sidebar" style="margin-top:10%">
 
 		<h3 class="text-center" ><?php echo $appName;?> </h3>
 		<ul class="sidebar-nav">
-			<li class="btn-block "><a href="?button=topUpParkingTicket">Top Up Car Ticket</a></li>
-			<li class="btn-block "><a href="experienceFull.html">View My Events</a></li>
-			<li class="btn-block "><a href="interestsFull.html"></a></li>
-			<li class="btn-block "><a href="achievementsFull.html">View Issues</a></li>
-			<li class="btn-block "><a href="skillsFull.html">Skills</a></li>
+			<li class="btn-block "><a href="?button=topUpParkingTicket"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTop Up Car Ticket</a></li>
+			<li class="btn-block "><a href="?userValue=allEventsForUser"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspView My Events</a></li>
+			<li class="btn-block "><a href="achievementsFull.html"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTrack Sent Stamps</a></li>
+			<li class="btn-block "><a href="skillsFull.html"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspNotifications</a></li>
 		</ul>
-		<p>Find me on:</p>
-		<div style="padding-left:5em">
-			<a href="#"><span style="background-color: blue"class="glyphicon glyphicon-facebook"></span></a>
-			<a href="#"><span class="glyphicon glyphicon-github"></span></a>
-			<a href="#"><span class="glyphicon glyphicon-linkedin"></span></a>
-			<a href="#"><span class="glyphicon glyphicon-twitter"></span></a>
-
-			<?php echo $rightBox; ?>
-		</div>
 	</div>
 	
 
-			<div id="main-content" class="container" style="margin-top: 2%">
+			<div id="main-content" class="container" style="margin-top: 10%">
 				<div class="col-lg-2">
-					<div>
+					<div style='position: fixed'>
 						<ul class="nav nav-pills nav-stacked">
-						    <li><a data-toggle="pill" href="#stampdiv">Postal Stamp</a></li>
-						    <li><a a data-toggle="pill" href="#cparkdiv">Parking Ticket</a></li>
-						    <li><a a data-toggle="pill" href="#eventdiv">Create Event</a></li>
+						    <li><a data-toggle="pill" href="#stampdiv"><span class="glyphicon glyphicon-chevron-right"></span>Postal Stamp&nbsp&nbsp<span class='glyphicon glyphicon-envelope'></span></a></li>
+						    <li><a a data-toggle="pill" href="#cparkdiv"><span class="glyphicon glyphicon-chevron-right"></span>Parking Ticket&nbsp<span class='glyphicon glyphicon-barcode'></span></a></li>
+						    <li><a a data-toggle="pill" href="#eventdiv"><span class="glyphicon glyphicon-chevron-right"></span>Create Event&nbsp&nbsp<span class='glyphicon glyphicon-cutlery'></span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -134,6 +128,8 @@
 								include_once 'usersDetails.php';
 							else if($userDropMenu=='editDetails')
 								include_once 'editUserDetails.php';
+							else if($userDropMenu=='allEventsForUser')
+								include_once 'view_all_events_for_user.php';
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
 						echo $leftBox;

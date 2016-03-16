@@ -20,7 +20,7 @@ else if($qrType == 'CPARK'){
 */
 
 
-$url = "http://localhost/FYP/FYP/phpqrcode/index.php?genButton=$genButton&ponumber=$ponumber";
+$url = "http://localhost/FYP/FYP/phpqrcode/index.php?genButton=$genButton&ponumber=$ponumber&ticketID=$ticketID";
 
 
 $ch = curl_init();

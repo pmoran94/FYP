@@ -1,9 +1,9 @@
 <form action="index.php" method="post">
 	<fieldset>
-		<input id='action' type='hidden' name='action' value='search' />
+		<input id='action' type='hidden' name='action' value='searchCustomers' />
 		<p>
 			<label for="search"></label> <input type="text"
-				id="search" name="search" placeholder="Search"
+				id="search" name="searchValue" placeholder="Search"
 				maxlength="25" required />
 		</p>
 		

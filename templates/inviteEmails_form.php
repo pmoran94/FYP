@@ -38,8 +38,8 @@
 		
 		<p>
 		<div class="form-group">
-			<div class="controls">
-				<button type="submit" class="btn btn-warning" style="color:grey"><a href='./phpqrcode/index.php?genButton=stamp'>Create</a></button>
+			<div class="controls" id='submitB'>
+				
 			</div>
 		</div>
 		</p>
@@ -56,8 +56,12 @@ $(function() {
         	var num = $( '#noOfInvites' ).val();
 
         	for(i=0;i<num;i++){
-        		$('#emailAddresses').append("Email Address).: <input type='email' name='emails' style='height:20;width;50%'id='emails'>"+"<br>"); 
+        		$('#emailAddresses').append("Full Name).: <input type='text' name=names[] style='height:20px;width:40%' maxlenght='40'><br>Email Address).: <input type='email' name=emails[] style='height:20px;width;50%'id='emails'>"+"<br><br>"); 
         	}
+
+        	$('#submitB').append(
+        	"<button type='submit' class='btn btn-warning' style='color:grey'>Create</button>"
+        	);
 
     });
  });

@@ -49,6 +49,7 @@ class View {
 		$authenticationErrorMessage = "";
 		$leftBox = "";
 		$empLeftBox= "";
+		$adLeftBox="";
 		$rightBox = "";
 		$middleBox = "";
 		$introTop="";
@@ -72,9 +73,25 @@ class View {
 					if($this->model->isUserLoggedInAdmin()){
 						//$introTop = $username . " : " . $empnumber;
 						$adLink;
-						if(! empty($_GET['adButton'])) $abLink = $_GET['adButton'];
+
+						if(! empty($_GET['adButton'])) $adLink = $_GET['adButton'];
 						else $adLink ="";
 
+						if($adLink == 'liopenScanner'){
+
+							// either open scanner on view
+							// or display
+
+						}
+						else if($adLink == 'lireportIssue'){
+							$adLeftBox = $employee_issueReport;
+						}
+						else if($adLink == 'liPassChange'){
+							$adLeftBox = $changePinForm;
+						}
+						else if($adLink == ''){
+
+						}
 
 						
 					}else

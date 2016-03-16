@@ -15,7 +15,7 @@ include_once 'authentication_factory.php';
 class Model {
 	public $DAO_Factory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",	$searchResults=""; // strings
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$searchResults=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
 	
@@ -115,6 +115,16 @@ class Model {
 		$this->allInviteesForEvent = $this->qrticketsDAO->getInviteesForEvent($ev_Id);
 	}
 
+	public function getAllEventsForUser(){
+		$uid;
+
+		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
+		else $uid = "";
+
+		$userEmail = $this->customersDAO->getUserEmail($uid);
+		$this->allEventsForUser = $this->qrticketsDAO->getAllEventsForUser($uid,$userEmail);
+	}
+
 	public function getUserDetails(){
 
 		$uid;
@@ -153,13 +163,16 @@ class Model {
 	public function getAllEmployees(){
 		$this->allEmployees = $this->employeesDAO->getAllEmployees();
 	}
-	public function search($parameters){
-		$this->searchResults = $this->contentDAO->searchResults($parameters);
+	public function searchCustomers($parameters){
+		$this->searchResults = $this->customersDAO->searchResults($parameters);
 	}
 	
 	
-	public function createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID){
-		return ($this->qrticketsDAO->insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID));
+	public function createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation){
+		return ($this->qrticketsDAO->insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation));
+	}
+	public function sendInvites($name,$email,$eventID){
+		return ($this->qrticketsDAO->insertIntoInvitesTable($name,$email,$eventID));
 	}
 
 	public function createStamp($destination,$weight,$type,$stampID,$userPO){

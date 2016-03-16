@@ -23,6 +23,26 @@ class customersDAO extends BaseDAO {
 			return (false);}
 	}
 
+	public function searchResults($parameters){
+		$sqlQuery = "SELECT CONCAT(fname,' ',sname) AS name,cmobile,cemail,caddr,ponumber,carRegistration,date_joined ";
+		$sqlQuery .= "FROM customers ";
+		$sqlQuery .= "WHERE ponumber";
+		$sqlQuery .= "like '%$parameters%' OR name like '%$parameters%' OR cemail like '%$parameters%' OR caddr like '%$parameters%' OR carRegistration like '%$parameters%'  ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		return $result;
+	}
+	public function getUserEmail($uid){
+		$sqlQuery = "SELECT cemail ";
+		$sqlQuery .= "FROM customers ";
+		$sqlQuery .= "WHERE id='$uid' ";		
+		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		if ($result != NULL) return $result[0]["cemail"];
+		return (NULL);
+	}
+
 	public function changePassword($hashNewPass,$userId){
 
 		$sqlQuery = "UPDATE customers ";

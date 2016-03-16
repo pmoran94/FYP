@@ -26,10 +26,19 @@ else if($var == 'submitParkTicket'){
 <h4>Generating QR Code...</h4>
 </div>
 
-
 <div id='qrcodeimg' style='display:none'>
-	<img src='phpqrcode/temp/'<?php echo $val; ?> style='height:140px; width:140px; margin-left: auto; margin-right: auto; display: block' />
+	<?php
+		
+		$PNG_WEB_DIR = 'phpqrcode/temp/';
+		//basename($filename)
+	
+		$filename = '2087921e21c9735a2c18321f5a8d55b73796e9e.png';
+
+	?>
+
+	<img src='phpqrcode/temp/5187438f78a582a2697fbc67c0c547d50b1c15f.png' style='height:140px; width:140px; margin-left:auto; margin-right:auto; display:block'>
 	<br>
+
 
 	<p>
 		<h3>To save your ticket...</h3>

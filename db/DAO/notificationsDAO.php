@@ -33,23 +33,6 @@ class notificationsDAO extends BaseDAO{
 	
 	}
 	
-	public function searchResults($parameters){
-		$sqlQuery = "SELECT * ";
-		$sqlQuery .= "FROM notifications ";
-		$sqlQuery .= " WHERE id ";
-		$sqlQuery .= "like '%$parameters%' OR name like '%$parameters%' OR description like '%$parameters%' OR rating like '%$parameters%'  ";
-		
-		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
-		return $result;
-	}
-	
-	public function updateRecord($mID,$mName,$mDesc,$mRate){
-		
-		$sqlQuery = "UPDATE notifications ";
-		$sqlQuery .= "SET name='$mName' , description='$mDesc' , rating='$mRate' ";
-		$sqlQuery .= "WHERE id='$mID' ";
-		$result = $this->getDbManager()->executeQuery($sqlQuery);		
-	}
 	
 	public function reportIssue($subject,$content,$userId,$userPO,$date,$username){
 	

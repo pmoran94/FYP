@@ -30,7 +30,7 @@
 										<li><a href="?aUserValue=editDetails"><span class="glyphicon glyphicon-cog"></span>Edit Profile</a></li>
 									</ul>
 								</li>
-								<li class=""><a href='?adButton=liEditScanner'>Edit Scanner</a></li>
+								<li class=""><a href='?adButton=liEditScanner'>Change Parking Rate</a></li>
 								<li class=""><a href='?adButton=liPassChange' name="changePass">Change Pin</a></li>
 							</ul>
 
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 
-	<div id="sidebar">
+	<div id="sidebar" style="margin-top:2%">
 
 		<h3 class="text-center" ><?php echo $appName;?> </h3>
 		<ul class="sidebar-nav">
@@ -76,51 +76,52 @@
 				<div class="col-lg-2">
 				</div>
 				<div class="col-lg-8">
-					<?php 
-						$userDropMenu;
-						
-						if (! empty($_GET['aUserValue'])) $userDropMenu = $_GET['aUserValue'];
-						else $userDropMenu = "";
+					<div class=jumbotron>
+						<?php 
+							$userDropMenu;
+							
+							if (! empty($_GET['aUserValue'])) $userDropMenu = $_GET['aUserValue'];
+							else $userDropMenu = "";
 
-						
+							
 
-						if( isset($userDropMenu))
-							if($userDropMenu=='viewDetails')
-								include_once 'employeeDetails.php';
-							else if($userDropMenu=='editDetails')
-								include_once 'editEmployeeDetails.php';
-							else if($userDropMenu == 'viewCustIssues'){
-								include_once 'viewCustomer_issues.php';
-							}
-							else if($userDropMenu == 'viewEmpIssues'){
-								include_once 'viewEmployee_issues.php';
-							}
-							else if($userDropMenu =='viewAllCust'){
-								include_once 'view_customers.php';
-							}
-							else if($userDropMenu =='viewAllEmp'){
-								include_once 'view_employees.php';
-							}
-							else if($userDropMenu =='viewAllAdmins'){
-								include_once '';
-							}
-							else if ($userDropMenu =='viewAllQRs'){
-								include_once '';
-							}
-							else if($userDropMenu =='viewAllEvents'){
-								include_once 'view_events.php';
-							}
-							else if($userDropMenu =='viewAllStamps'){
-								include_once 'view_stamps.php';
-							}
-							else if($userDropMenu =='viewAllParking '){
-								include_once 'view_parkingtickets.php';
-							}
-						else if(isset($_POST['editUserDetailsP']))
-							include_once 'editUserDetails.php';
-						echo $middleBox ;
-					?>
-					
+							if( isset($userDropMenu))
+								if($userDropMenu=='viewDetails')
+									include_once 'employeeDetails.php';
+								else if($userDropMenu=='editDetails')
+									include_once 'editEmployeeDetails.php';
+								else if($userDropMenu == 'viewCustIssues'){
+									include_once 'viewCustomer_issues.php';
+								}
+								else if($userDropMenu == 'viewEmpIssues'){
+									include_once 'viewEmployee_issues.php';
+								}
+								else if($userDropMenu =='viewAllCust'){
+									include_once 'view_customers.php';
+								}
+								else if($userDropMenu =='viewAllEmp'){
+									include_once 'view_employees.php';
+								}
+								else if($userDropMenu =='viewAllAdmins'){
+									include_once '';
+								}
+								else if ($userDropMenu =='viewAllQRs'){
+									include_once '';
+								}
+								else if($userDropMenu =='viewAllEvents'){
+									include_once 'view_events.php';
+								}
+								else if($userDropMenu =='viewAllStamps'){
+									include_once 'view_stamps.php';
+								}
+								else if($userDropMenu =='viewAllParking '){
+									include_once 'view_parkingtickets.php';
+								}
+							else if(isset($_POST['editUserDetailsP']))
+								include_once 'editUserDetails.php';
+							else echo $adLeftBox ;
+						?>
+					</div>
 				</div>
 				<div class="col-lg-2">
 				</div>

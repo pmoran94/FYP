@@ -27,37 +27,33 @@
 
 $timestamp = date("Y/m/dh:i:sa");
 $currentUserId = $_GET['ponumber'];
-$ticketType = "";
-$invitee = "";
-$eventID = "";
-$ticketID = "";
-$typeOfEntree = "";
-$ticket = "";
+$ticketID = $_GET['ticketID'];
+
 
 
 
 $qrPurpose = $_GET['genButton'];
 
 if($qrPurpose == 'cpark'){
-    $ticket = genCparkData($currentUserId,$timestamp);
+    $ticket = genCparkData($currentUserId,$timestamp,$ticketID);
 }
 else if($qrPurpose == 'event'){
-    $ticket = genStampData($currentUserId,$timestamp);
+    $ticket = genStampData($currentUserId,$timestamp,$ticketID);
 }
 else if($qrPurpose == 'stamp'){
-    $ticket = genStampData($currentUserId,$timestamp);
+    $ticket = genStampData($currentUserId,$timestamp,$ticketID);
 }
 else
     $ticket = "";
 
 
 
-function genStampData($currentUserId,$timestamp){
+function genStampData($currentUserId,$timestamp,$ticketID){
     $ticketType = "STAMP";
 
     return $ticketType . $currentUserId . $timestamp;
 }
-function genCparkData($currentUserId,$timestamp){
+function genCparkData($currentUserId,$timestamp,$ticketID){
     $ticketType = "CPARK";
 
     return $ticketType . $currentUserId . $timestamp;
@@ -105,7 +101,7 @@ function genEventData(){
             
         // user data
         
-        $filename = $PNG_TEMP_DIR.'test'.md5($ticket.'|'.$errorCorrectionLevel.'|'.$matrixPointSize).'.png';
+        $filename = $PNG_TEMP_DIR. $ticketID .md5($ticket.'|'.$errorCorrectionLevel.'|'.$matrixPointSize).'.png';
     
         QRcode::png($ticket, $filename, $errorCorrectionLevel, $matrixPointSize, 2);    
         
