@@ -23,7 +23,7 @@
 				case "deleteCustomer" : 
 					$this->deleteCustomer($parameters);
 					break;
-				case "insertNewAdmin" :
+				case "insertNewEmployee" :
 					$this->insertNewEmployee($parameters);
 					break;
 				case "reportIssue" :
@@ -96,6 +96,7 @@
 			$this->model->getAllEvents();
 			$this->model->getAllParkingTickets();
 			$this->model->getAllEventsForUser();
+			$this->model->getAllCompanyNames();
 		}
 		
 
@@ -213,7 +214,8 @@
 			//if(strtotime($eventDate>$dateOfCreation))
 				if($this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation))
 					foreach($inviteNames as $index=>$name){
-						$this->model->sendInvites($name,$inviteEmail[$index],$eventID);
+						$inviteID = $this->model->validationFactory->$inviteIDGenerator($eventID);
+						$this->model->sendInvites($name,$inviteEmail[$index],$eventID,$inviteID);
 						// TODO
 						// Code to send individual emails to invitees
 					}
@@ -404,7 +406,6 @@
 			$passConf = $parameters ["fPassConf"];
 			$date_joined = date("Y/m/d");
 			$ponumber = $this->model->validationFactory->poNumGenerator();
-			$ac_amount = 5.00;
 			
 			//All fields must be filled
 			if (! empty ( $firstName ) && ! empty ( $secondName ) && ! empty ( $email ) && ! empty ( $mobile ) && ! empty ( $address ) && ! empty ( $password ) && ! empty($date_joined) && ! empty($ponumber)) {
@@ -418,7 +419,7 @@
 								if (! $this->model->authenticationFactory->isUserExisting ( $email )) {
 								// the hashed password is saved in a variable and along with the new username .....
 									$hashedPassword = $this->model->authenticationFactory->getHashValue ( $password );
-									if ($this->model->insertNewCustomer ( $firstName,$secondName,$mobile,$address,$email, $hashedPassword,$date_joined,$ponumber,$ac_amount )) {
+									if ($this->model->insertNewCustomer ( $firstName,$secondName,$mobile,$address,$email, $hashedPassword,$date_joined,$ponumber )) {
 										$this->model->hasRegistrationFailed = false;
 										$this->model->setConfirmationMessage();
 										/*
@@ -454,13 +455,14 @@
 			$firstName = $parameters["fFirstname"];
 			$secondName = $parameters["fSurname"];
 			$dob = $parameters["fDOB"];
-			$is_admin = $parameters["fIs_Admin"];
 			$mobile = $parameters["fMobile"];
 			$address = $parameters["fAddr"];
 			$email = $parameters ["fEmail"];
-			$empPin = $parameters ["fPin"];
-			$empPinConf = $parameters["fPinConf"];
+			$empPin = $parameters ["fPassword"];
+			$empPinConf = $parameters["fPassConf"];
 			$date_joined = date("Y/m/d h:i:sa");
+			$companyID = $parameters['fCompanyName'];
+			//$companyID = $this->model->validationFactory->getCompanyIDByName($companyName);
 			$empNum = $this->model->validationFactory->empNumGenerator();
 			
 			//All fields must be filled
@@ -470,7 +472,7 @@
 				This is mainly to ensure that the new  email that the new user has entered does not match an existing user and that character lenght and casings are adequate
 				*/
 				if($empPin == $empPinConf){
-					if($this->model->validationFactory->isUserAgeValid($dob,18)){
+					if(! empty($companyID)){
 						if ($this->model->validationFactory->isLengthStringValid( $firstName, NEW_USER_FORM_MAX_USERNAME_LENGTH ) && $this->model->validationFactory->isLengthStringValid ($secondName,NEW_USER_FORM_MAX_USERNAME_LENGTH) && $this->model->validationFactory->isEmailValid ( $email ) && $this->model->validationFactory->isMobileValid( $mobile , MAX_LENGTH_FOR_MOBILE )) {
 							//if (! $this->model->authenticationFactory->isAdminEmailExisting ( $email )) {
 							// the hashed password is saved in a variable and along with the new username .....
@@ -478,7 +480,7 @@
 								//...... is inserted to the database
 								// the hasRegistrationFailed methosd is assigned false so will not take affect 
 								//the user is notified of the completed insertion
-								if ($this->model->insertNewEmployee ( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$is_admin)) {
+								if ($this->model->insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID)) {
 									$this->model->hasRegistrationFailed = false;
 									$this->model->setConfirmationMessage();
 									return (true);

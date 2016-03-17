@@ -18,7 +18,7 @@ class notificationsDAO extends BaseDAO{
 	}
 	public function getAllEmployeeIssues(){
 	
-		$sqlQuery = "SELECT emp_id,customer_,subject,content,date_ ";
+		$sqlQuery = "SELECT emp_id,subject,content,date_ ";
 		$sqlQuery .= "FROM notifications ";
 		
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);

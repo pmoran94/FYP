@@ -23,7 +23,7 @@ class View {
 
 		$cusloginBox = file_get_contents ( "./templates/cus_login_form.php", FILE_USE_INCLUDE_PATH );
 		$registrationForm = file_get_contents('./templates/insert_new_user_form.php',FILE_USE_INCLUDE_PATH);
-		$registrationAdminForm = file_get_contents('./templates/insert_new_admin_form.php',FILE_USE_INCLUDE_PATH);
+		$registrationEmployeeForm = file_get_contents('./templates/insertNewEmployee_form.php',FILE_USE_INCLUDE_PATH);
 		$updateRecordForm = file_get_contents('./templates/update_record_form.php');
 		$newRecordForm = file_get_contents('./templates/insert_new_record.php');
 		$searchForm = file_get_contents('./templates/search_form.php');
@@ -44,6 +44,7 @@ class View {
 		$stampForm = file_get_contents('./templates/postalStampForm.php');
 		$parkingForm = file_get_contents('./templates/parkingTicketForm.php');
 		$download = file_get_contents('./download_header.php');
+		$changeCPPrice = file_get_contents('./templates/updateParkingPrice_form.php');
 
 
 		$authenticationErrorMessage = "";
@@ -88,6 +89,12 @@ class View {
 						}
 						else if($adLink == 'liPassChange'){
 							$adLeftBox = $changePinForm;
+						}
+						else if($adLink == 'liAddNewEmployee'){
+							$adLeftBox = $registrationEmployeeForm;
+						}
+						else if($adLink == 'liChangeCPPrice'){
+							$adLeftBox = $changeCPPrice;
 						}
 						else if($adLink == ''){
 

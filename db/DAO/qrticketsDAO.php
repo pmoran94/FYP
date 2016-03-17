@@ -19,6 +19,19 @@ class qrticketsDAO extends BaseDAO {
 
 
 	}
+	public function isInviteIDValid($inviteID,$eventID){
+
+		$sqlQuery = "SELECT * FROM invites ";
+		$sqlQuery .= "WHERE eventID='$eventID' AND ";
+		$sqlQuery .= "inviteID='$inviteID' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result !=null) return true;
+		else return false;
+
+
+	}
 
 	public function insertNewQRCodeTEST($sampleQRTYPE){
 		
@@ -109,10 +122,10 @@ class qrticketsDAO extends BaseDAO {
 	public function getAllInviteesForEvent(){
 		return true;
 	}
-	public function insertIntoInvitesTable($name,$email,$eventID){
+	public function insertIntoInvitesTable($name,$email,$eventID,$inviteID){
 		$sqlQuery = "INSERT into ";
-		$sqlQuery .= "invites (name,email,eventID) ";
-		$sqlQuery .= "VALUES ('$name','$email','$eventID') ";
+		$sqlQuery .= "invites (name,email,eventID,inviteID) ";
+		$sqlQuery .= "VALUES ('$name','$email','$eventID','$inviteID') ";
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 		return $result;
 	}

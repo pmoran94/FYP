@@ -25,20 +25,6 @@ class validation_factory {
 		else return (true);
 	}
 
-	public function isUserAgeValid($dob,$minAge){
-
-		  //explode the date to get month, day and year
-		$birthDate = explode("/", $dob);
-		  //get age from date or birthdate
-		$age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md")
-		    ? ((date("Y") - $birthDate[2]) - 1)
-		    : (date("Y") - $birthDate[2]));
-		if($age > $minAge){
-			return(true);
-
-		}else return(false);
-
-	}
 
 	public function IsTicketActive($ticketID){
 		return($this->qrticketsDAO->IsTicketActive($ticketID));
@@ -158,6 +144,23 @@ class validation_factory {
 		}
 
 		return ($eventID);
+	}
+	public function inviteIDGenerator($eventID){
+		$inviteID;
+		$flag = 0;
+		
+		while($flag == 0){
+
+			$inviteID = rand(10000000,99999999);
+
+			if( $this->qrticketsDAO->isInviteIDValid($inviteID,$eventID)){
+				$flag = 0 ;
+			}
+			else
+				$flag =1;
+		}
+
+		return ($inviteID);
 	}
 
 	public function qrcodeIDGenerator(){

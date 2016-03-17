@@ -23,6 +23,14 @@ class employeesDAO extends BaseDAO {
 			return (false);}
 	}
 
+	public function getAllCompanyNames(){
+		$sqlQuery = "SELECT company_name ";
+		$sqlQuery .= "FROM companies ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+
+		return $result;
+	}
+
 
 	public function changePin($hashNewPin,$userId){
 
@@ -87,10 +95,10 @@ class employeesDAO extends BaseDAO {
 
 	}
 
-	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum, $is_admin) {
+	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID) {
 		
-		$sqlQuery = "INSERT INTO employees (fname,sname,dob,mobile,address,email,emp_no,emp_pin,date_employed, is_admin) ";
-		$sqlQuery .= "VALUES ('$firstName','$secondName','$dob','$mobile','$address','$email','$empNum','$hashedPin','$date_joined','$is_admin') ";
+		$sqlQuery = "INSERT INTO employees (fname,sname,dob,mobile,address,email,emp_no,emp_pin,date_employed,companyID) ";
+		$sqlQuery .= "VALUES ('$firstName','$secondName','$dob','$mobile','$address','$email','$empNum','$hashedPin','$date_joined','$companyID') ";
 		
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);

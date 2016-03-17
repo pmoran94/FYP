@@ -108,6 +108,10 @@ class authentication_factory {
 		return($_SESSION ['isUserEmploy']);
 	}
 
+	public function getAllCompanyNames(){
+		return($this->employeesDAO->getAllCompanyNames());
+	}
+
 
 	public function getPONumberLoggedIn(){
 		$cid = $_SESSION['user_id'];

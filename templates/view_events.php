@@ -4,8 +4,8 @@ include_once './db/simple_db_manager.php';
 
 echo "<div ><h3>Stamps </h3></div>";
 echo "<div style='overflow:auto;height:100%'>";
-echo "<table class= 'table table-hover ' border='1' style='text-align:left; background-color:skyblue; color:black; margin:0px'>";
-echo "<thead style='background-color:cyan'>";
+echo "<table class= 'table' style='text-align:left; color:black; margin:0px'>";
+echo "<thead>";
 echo "<tr>
 <th>Event Name:   </th>
 <th>Description:   </th>
@@ -18,6 +18,7 @@ echo "<tr>
 <th>Location:</th>
 <th>Event ID:</th>
 <th>Active?:</th>
+<th>Remove: </th>
 </tr>";
 
 echo "</thead>";
@@ -33,6 +34,7 @@ foreach ($this->model->allEvents as $row){
 	echo "<td>" . $row ['eventLocation'] . "</td>";
 	echo "<td>" . $row ['eventID'] . "</td>";
 	echo "<td>". $row ['active']."</td>";
+	echo "<td><a><span class='glyphicon glyphicon-menu-alt'></span></a></td>";
 	echo "</tr>";
 }
 echo "</table>";

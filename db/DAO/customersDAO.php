@@ -123,10 +123,10 @@ class customersDAO extends BaseDAO {
 	/*
 		Inserting a new user, to the database , using valid username, email and a hashed password
 	*/
-	public function insertNewCustomer($firstName,$secondName,$mobile,$address,$email,$hashedPassword,$date_joined,$ponumber,$ac_amount) {
+	public function insertNewCustomer($firstName,$secondName,$mobile,$address,$email,$hashedPassword,$date_joined,$ponumber) {
 		
-		$sqlQuery = "INSERT INTO customers (fname,sname,cmobile,cemail,caddr,cpassword,ponumber,ac_amount,date_joined) ";
-		$sqlQuery .= "VALUES ('$firstName','$secondName','$mobile','$email','$address','$hashedPassword','$ponumber','$ac_amount','$date_joined') ";
+		$sqlQuery = "INSERT INTO customers (fname,sname,cmobile,cemail,caddr,cpassword,ponumber,date_joined) ";
+		$sqlQuery .= "VALUES ('$firstName','$secondName','$mobile','$email','$address','$hashedPassword','$ponumber','$date_joined') ";
 		
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
@@ -191,7 +191,7 @@ class customersDAO extends BaseDAO {
 	}
 	public function getAllCustomers(){
 	
-		$sqlQuery = "SELECT id,CONCAT(fname,' ',sname) AS username,cmobile,cemail,caddr,cpassword,ponumber,ac_amount,date_joined ";
+		$sqlQuery = "SELECT id,CONCAT(fname,' ',sname) AS username,cmobile,cemail,caddr,cpassword,ponumber,date_joined ";
 		$sqlQuery .= "FROM customers ";
 		
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);

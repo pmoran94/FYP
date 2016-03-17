@@ -30,7 +30,9 @@
 										<li><a href="?aUserValue=editDetails"><span class="glyphicon glyphicon-cog"></span>Edit Profile</a></li>
 									</ul>
 								</li>
-								<li class=""><a href='?adButton=liEditScanner'>Change Parking Rate</a></li>
+								<li class=""><a href='?adButton=liChangeCPPrice'>Change Parking Rate</a></li>
+								<li class=""><a href='#'>Add new Company</a></li>
+								<li class=""><a href='?adButton=liAddNewEmployee'>Add new Employee</a></li>
 								<li class=""><a href='?adButton=liPassChange' name="changePass">Change Pin</a></li>
 							</ul>
 
@@ -114,9 +116,11 @@
 								else if($userDropMenu =='viewAllStamps'){
 									include_once 'view_stamps.php';
 								}
-								else if($userDropMenu =='viewAllParking '){
+								else if($userDropMenu =='viewAllParking'){
 									include_once 'view_parkingtickets.php';
 								}
+								else 
+									echo $adLeftBox;
 							else if(isset($_POST['editUserDetailsP']))
 								include_once 'editUserDetails.php';
 							else echo $adLeftBox ;

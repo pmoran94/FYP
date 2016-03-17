@@ -4,10 +4,9 @@ include_once './db/simple_db_manager.php';
 
 echo "<div ><h3>Employees</h3></div>";
 echo "<div style='overflow:auto;height:100%'>";
-echo "<table class= 'table table-hover ' border='1' style='text-align:left; background-color:skyblue; color:black; margin:0px'>";
-echo "<thead style='background-color:cyan'>";
+echo "<table class= 'table table' style='text-align:left; color:black; margin:0px'>";
+echo "<thead>";
 echo "<tr>
-<th>ID  </th>
 <th>Name:   </th>
 <th>Is Admin:   </th>
 <th>DoB:   </th>
@@ -16,12 +15,12 @@ echo "<tr>
 <th>Email:   </th>
 <th>Employee No.:   </th>
 <th>Date Started:   </th>
+<th colspan='2'>Action:  </th>
 </tr>";
 
 echo "</thead>";
 foreach ($this->model->allEmployees as $row){
 	echo "<tr>";
-	echo "<td>" . $row ['e_id'] . "</td>";
 	echo "<td>" . $row ['username'] . "</td>";
 	echo "<td>" . $row ['is_admin'] . "</td>";
 	echo "<td>" . $row ['dob'] . "</td>";
@@ -30,6 +29,7 @@ foreach ($this->model->allEmployees as $row){
 	echo "<td>" . $row ['email'] . "</td>";
 	echo "<td>" . $row ['emp_no'] . "</td>";
 	echo "<td>" . $row ['date_employed'] . "</td>";
+	echo "<td><a><span class='glyphicon glyphicon-briefcase'></span></a></td><td><a><span class='glyphicon glyphicon-remove'></span></a></td>"; 
 
 	echo "</tr>";
 }
