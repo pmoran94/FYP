@@ -40,25 +40,13 @@
 				
 			</div>
 			<div id='topup-2' class="toHide" style='display:none;'>
-				<lable for=''></lable>
-					<select name=amount>
-						<option value=30>.50c</option>
-						<option value=60>1 Euro</option>
-						<option value=90>1.50 Euro</option>
-						<option value=120>2 Euro</option>
-						<option value=150>2.50 Euro</option>
-						<option value=180>3 Euro</option>
-						<option value=240>4 Euro</option>
-						<option value=300>5 Euro</option>
-						<option value=360>6 Euro</option>
-						<option value=420>7 Euro</option>
-						<option value=480>8 Euro</option>
-						<option value=540>9 Euro</option>
-						<option value=600>10 Euro</option>
-						<option value=660>11 Euro</option>
-						<option value=720>12 Euro</option>
-					</select>
-				
+				<lable for='amount'></lable>
+				<p style='color:red'>
+					Please Enter the value in the following format : 5.00, 10.50 etc.
+
+				</p>
+				<input type='number' step='any' name='amount' id='amount' style='height:40px' max=60 placeholder="Enter Amount (Max:60)">
+					
 			</div>
 
 	

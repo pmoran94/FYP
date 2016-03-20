@@ -19,6 +19,23 @@ class qrticketsDAO extends BaseDAO {
 
 
 	}
+
+	public function getCurrentParkingPrice(){
+		$sqlQuery = "SELECT parking_price ";
+		$sqlQuery .= "FROM ticketprice ";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		if($result != null) return $result[0]['parking_price'];
+		else return false;
+	}
+
+	public function updateParkingPrice($price){
+		$sqlQuery = "UPDATE ticketprice ";
+		$sqlQuery .= "SET parking_price='$price' ";
+		$sqlQuery .= "WHERE id=1";
+
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
 	public function isInviteIDValid($inviteID,$eventID){
 
 		$sqlQuery = "SELECT * FROM invites ";

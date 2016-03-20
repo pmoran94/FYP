@@ -192,6 +192,12 @@ class Model {
 	public function deactivateExistingParkingTicket($ponumber){
 		return($this->qrticketsDAO->deactivateExistingParkingTickets($ponumber));
 	}
+	public function getCurrentParkingPrice(){
+		return($this->qrticketsDAO->getCurrentParkingPrice());
+	}
+	public function updateParkingPrice($price){
+		return($this->qrticketsDAO->updateParkingPrice($price));
+	}
 
 	public function getCurrentExpiryTimeToUpdate($ponumber){
 		return($this->qrticketsDAO->getCurrentExpiryTime($ponumber));

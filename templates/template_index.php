@@ -83,7 +83,7 @@
 
 				<div class="col-lg-8 tab-content"  style="background-color:lavender; background:rgba(255,255,255,0.3)">
 					<!--div class=''-->
-						<?php echo "<h2 class='text-center'>" . $introTop . "</h2>";
+						<?php echo "<h2 class='text-center'>" . $introTop. "</h2>";
 						echo "<div style='text-align:center'>" ;
 						echo	"<form method='post' index=''>";
 
@@ -132,7 +132,7 @@
 								include_once 'view_all_events_for_user.php';
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
-						echo $leftBox;
+						echo $leftBox ;
 					?>
 					<br>
 

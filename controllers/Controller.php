@@ -8,6 +8,9 @@
 		public function __construct($model, $action = null, $parameters) {
 			$this->model = $model;
 			switch ($action) {
+				case "stripePayment":
+					$this->stripePayment($parameters);
+					break;
 				case "insertNewUser" :
 					$this->insertNewCustomer ( $parameters );
 					break;
@@ -50,12 +53,6 @@
 				case "updateParkingTicket" : 
 					$this->updateParkingTicket($parameters);
 					break;
-				case "insertNewRecord":
-					$this->insertNewRecord($parameters);
-					break;
-				case "updateRecord":
-					$this->updateRecord($parameters);
-					break;
 				case "viewUsers":
 					$this->getAllUsers();
 					break;
@@ -71,8 +68,8 @@
 				case "makeOrder":
 					$this->makeOrder($parameters);
 					break;
-				case "deleteRecord":
-					$this->deleteRecord($parameters);
+				case "updateParkingPrice":
+					$this->updateParkingPrice($parameters);
 					break;
 				case "searchCustomers":
 					$this->searchCustomers($parameters);
@@ -99,7 +96,45 @@
 			$this->model->getAllCompanyNames();
 		}
 		
+		function stripePayment($parameters){
+			\Stripe\Stripe::setApiKey("sk_test_8mEEBKrOnvUrMtDpQGBUBnri ");
 
+			// Get the credit card details submitted by the form
+			$token = $_POST['stripeToken'];
+
+
+			// Create a Customer
+			$customer = \Stripe\Customer::create(array(
+			  "source" => $token,
+			  "description" => "Example customer")
+			);
+
+			// Charge the Customer instead of the card
+			\Stripe\Charge::create(array(
+			  "amount" => 1000, // amount in cents, again
+			  "currency" => "eur",
+			  "customer" => $customer->id)
+			);
+
+			// YOUR CODE: Save the customer ID and other info in a database for later!
+
+			// YOUR CODE: When it's time to charge the customer again, retrieve the customer ID!
+
+			\Stripe\Charge::create(array(
+			  "amount"   => 1500, // €15.00 this time
+			  "currency" => "eur",
+			  "customer" => $customerId // Previously stored, then retrieved
+			  ));
+
+		
+		}
+
+		function updateParkingPrice($parameters){
+			$price = $parameters['parkingPrice'];
+
+			if(! empty($price))
+				$this->model->updateParkingPrice($price);
+		}
 
 		function reportIssue($parameters){
 			$subject = $parameters['issueSubject']; 
@@ -242,99 +277,56 @@
 				if($this->model->insertIntoQRTable($qrType,$ticketID))
 					if($this->model->createParkingTicket($ponumber,$dateOfCreation,$ticketID,$initialExpiryTime))
 						include_once'./callQRGenerator.php';
+						//Deduct Appropriate Amount
 					
 		}
 
 		function updateParkingTicket($parameters){
 			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
 			$option = $parameters['topUpUsing'];
-			$amount = $parameters['amount'];
+			$amount = 100*$parameters['amount'];
 			$duration = $parameters['duration'];
 			$currentTime = date('Y-m-d H-i-s');
 			$currentExpiry = "";
-			$cost = "";
-			
+			$currentParkingPrice = $this->model->getCurrentParkingPrice();
+			$minutes = "";
 			$newExpiry="";
+
+			if(! empty($amount) && $option == 1) $cost = $amount;
+			else $cost = "";
 
 			if($this->model->checkForActiveTicket($ponumber))
 				$currentExpiry = $this->model->getCurrentExpiryTimeToUpdate($ponumber);
 			
 
 
-			/**
-				WORKING OFF THE ASSUMPTION 1EURO = 1 HOUR;
-			*/
+			if($option==2){
+				
+				$var = round($amount/$currentParkingPrice,2);
 
+				if(is_float($var)){
+					$str_arr = explode('.',$var);
+					$addHour = $str_arr[0];
 
-			//"UPDATE table SET table.table_date = '{$date->format('Y-m-d H:i:s')}'"
-			// date('Y-m-d H:i',strtotime('+1 hour +20 minutes',strtotime($start)));
+					if(! empty($str_arr[1])) $aftDec = $str_arr[1];
+					else $aftDec = null;
+					
+					if(empty($aftDec)) $minutes = 0;
+					else $minutes = round($aftDec*.6);
+				}
+				else 
+					$addHour = $var;
+				$newExpiry = date('Y-m-d H:i:s',strtotime($currentExpiry) + (60*60*$addHour)+60*$minutes); 
 
-	
-				// TOP UP BY DURATION
-			if($duration == "30" || $amount == "30"){
-				$cost = '.5';
-				$newExpiry = date('Y-m-d H:i',strtotime('+30 minutes',strtotime($currentExpiry)));
-			} 
-			else if($duration == "60" || $amount == "60"){
-				$cost = '1.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+1 hour',strtotime($currentExpiry)));
-			}  
-			else if($duration == "90" || $amount == "90"){
-				$cost = '1.5';
-				$newExpiry = date('Y-m-d H:i',strtotime('+1 hour +30 minutes',strtotime($currentExpiry)));
 			}
-			else if($duration == "120" || $amount == "120"){
-				$cost = '2.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+2 hours',strtotime($currentExpiry)));
+			else if($option == 1){
+				$cost = $duration*$currentParkingPrice;
+				$addedTime = $duration*60*60;
+				$newExpiry = date('Y-m-d H:i:s',strtotime($currentExpiry) +$addedTime); 
 			}
-			else if($duration == "150" || $amount == "150"){
-				$cost = '2.5';
-				$newExpiry = date('Y-m-d H:i',strtotime('+2 hours +30 minutes',strtotime($currentExpiry)));
-			}
-			else if($duration == "180" || $amount == "180"){
-				$cost = '3.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+3 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "240" || $amount == "240"){
-				$cost = '4.0'; 
-				$newExpiry = date('Y-m-d H:i',strtotime('+4 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "300" || $amount == "300"){
-				$cost = '5.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+5 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "360" || $amount == "360"){
-				$cost = '6.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+6 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "420" || $amount == "420"){
-				$cost = '7.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+7 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "480" || $amount == "480"){
-				$cost = '8.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+8 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "540" || $amount == "540"){
-				$cost = '9.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+9 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "600" || $amount == "600"){
-				$cost = '10.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+10 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "660" || $amount == "660"){
-				$cost = '11.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+11 hours',strtotime($currentExpiry)));
-			}
-			else if($duration == "720" || $amount == "720"){
-				$cost = '12.0';
-				$newExpiry = date('Y-m-d H:i',strtotime('+12 hours',strtotime($currentExpiry)));
-			}else{
-				$cost = "";
+			else 
+				$cost = null;
 				$newExpiry = $currentExpiry;
-				//
-			}
 
 			/**
 				TODO
