@@ -3,11 +3,11 @@
 Assigning some fixed values which will be used throughout the whole application
 */
 /* database constants */
-define("DB_HOST", "localhost" ); 		
-define("DB_USER", "root" ); 			
-define("DB_PASS", "" ); 		
+define("DB_HOST", "us-cdbr-iron-east-03.cleardb.net" ); 		
+define("DB_USER", "be0b95871569" ); 			
+define("DB_PASS", "c40019f3" ); 		
 define("DB_PORT", 3306);				
-define("DB_NAME", "fyp" ); 		
+define("DB_NAME", "heroku_6192e1613c2ebd9" ); 		
 
 /* application constants */
 define("APP_NAME", "Online QR System" ); 		
