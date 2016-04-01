@@ -10,7 +10,7 @@
 		<p>
 		<div class="form-group">
 			<div class="controls">
-				<button type="submit" class="btn btn-success">Search</button>
+				<button type="submit" name="viewCustSearch" class="btn btn-success">Search</button>
 			</div>
 		</div>
 		</p>

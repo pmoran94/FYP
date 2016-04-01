@@ -29,7 +29,10 @@ foreach ($this->model->allEmployees as $row){
 	echo "<td>" . $row ['email'] . "</td>";
 	echo "<td>" . $row ['emp_no'] . "</td>";
 	echo "<td>" . $row ['date_employed'] . "</td>";
-	echo "<td><a><span class='glyphicon glyphicon-briefcase'></span></a></td><td><a><span class='glyphicon glyphicon-remove'></span></a></td>"; 
+	echo "<td><form method='post' action='index.php'>
+		<input type='hidden' name='eid' value='".$row['e_id']."'>
+		<button class='btn btn-default' name='action' value='makeAdmin' ><span class='glyphicon glyphicon-user'></span></button></td>
+		<td><a><button class='btn btn-danger' name='action' value='deleteEmployee'><span class='glyphicon glyphicon-remove'></span></button></a></td>"; 
 
 	echo "</tr>";
 }

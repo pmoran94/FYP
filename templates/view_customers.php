@@ -1,5 +1,6 @@
 <?php
 
+include_once 'search_form.php';
 include_once './db/simple_db_manager.php';
 
 echo "<div ><h3>Customers </h3></div>";

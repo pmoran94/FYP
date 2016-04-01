@@ -161,6 +161,23 @@ class qrticketsDAO extends BaseDAO {
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 		return $result;
 	}
+
+	public function getAllDetailsForEvent($eid){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM events ";
+		$sqlQuery .= "WHERE eventID='$eid' ";
+		
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		
+		return $result;
+	}
+	public function deleteEvent($eid){
+		$sqlQuery = "DELETE from events ";
+		$sqlQuery .= "WHERE eventID='$eid' ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
+
 	public function getParkingTicketForUser($ponumber){
 		$sqlQuery = "SELECT * ";
 		$sqlQuery .= "FROM parkingtickets ";

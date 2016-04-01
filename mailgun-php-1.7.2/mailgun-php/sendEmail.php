@@ -10,7 +10,7 @@ $domain = "sandbox7d574f341db64f76b610db430023b87e.mailgun.org";
 //Make the call to the client.
 $result = $mgClient->sendMessage($domain, array(
     'from'    => 'Excited User <mailgun@sandbox7d574f341db64f76b610db430023b87e.mailgun.org>',
-    'to'      => 'Paul <cillinlyons@outlook.com>',
+    'to'      => 'Paul <pmoran94@hotmail.com>',
     'subject' => 'Event Invitation',
     'text'    => 'You have been invited to an event created by <USER>! 
     on the <TIMEDATE> at the <ADDRESS>!

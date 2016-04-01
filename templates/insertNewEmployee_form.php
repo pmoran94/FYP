@@ -35,9 +35,16 @@ Please fill in all fields.
 				maxlength="50" style="height:40px;width:100%" required />
 		</p>
 		<p>	
-			<label for="fCompanyName">Company Name:
-			<input type=text name='fCompanyName' maxlenght='50' placeholder="Company Name" style="height:40px;width:100%" required>
-
+			<label for="fCompanyName">Company Name:</label>
+			<input type='text' name='fCompanyName' maxlenght='50' placeholder="Company Name" style="height:40px;width:100%" required>
+		</p>
+		<p>
+			<label for="fCompanyService">Provided Service</label>
+			<select type='radio' name='fCompanyService'>
+				<option value='stamp'>Postal Service</option>
+				<option value='cpark'>Car Park Service</option>
+				<option value='event'>Event Staff</option>
+			</select>
 		</p>
 		<p>
 			<label for="fPassword">Pin Number</label>

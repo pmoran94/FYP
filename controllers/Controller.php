@@ -11,6 +11,9 @@
 				case "stripePayment":
 					$this->stripePayment($parameters);
 					break;
+				case "deleteEvent":
+					$this->deleteEvent($parameters);
+					break;
 				case "insertNewUser" :
 					$this->insertNewCustomer ( $parameters );
 					break;
@@ -37,6 +40,9 @@
 					break;
 				case "deleteEmployee" : 
 					$this->deleteEmployee($parameters);
+					break;
+				case "makeAdmin":
+					$this->makeAdmin($parameters);
 					break;
 				case "changePasswordForm":
 					$this->changePassword($parameters);
@@ -81,6 +87,11 @@
 			//Call the prepareIntroMessage() method from model after the switch statement is cleared
 			$this->model->prepareIntroMessage ();
 			//Calling the updateHeader  method, which calls methods from the model to check the login status of the user, and to update that status if needed
+
+			$e__ID = "";
+			if(!empty($_GET['evId'])) $e__ID =$_GET['evId'];
+			else $e__ID = "";
+
 			$this->updateHeader ();
 			$this->model->getAllCustomers();
 			$this->model->getAllCustomerIssues();
@@ -88,11 +99,12 @@
 			$this->model->getAllEmployees();
 			$this->model->getUserDetails();
 			$this->model->getEmployeeDetails();
-			//$this->model->searchCustomers();
+			//$this->model->searchCustomers($parameters['searchValue']);
 			$this->model->getAllStamps();
 			$this->model->getAllEvents();
 			$this->model->getAllParkingTickets();
 			$this->model->getAllEventsForUser();
+			$this->model->getAllDetailsForEvent($e__ID);
 			$this->model->getAllCompanyNames();
 		}
 		
@@ -160,23 +172,15 @@
 		
 		
 		function deleteCustomer($parameters){
-			$email = $parameters['fEmail'];
-			$ponumber = $parameters['fponumber'];
-
-			$POEmail = $this->model->compareEmailToPO ($ponumber);
-
-//$a = array_map('strval', $a);
-			if( $email==$POEmail) {
-				$this->model->deleteUser($email);
-			}
-			else{
-				$this->model->setUpNewUserError ( NEW_USER_FORM_ERRORS_CUS_DELETEMISMATCH );
-			}
+			$custID = $parameters['cus_id'];
+			if(! empty($custId))
+				$this->model->deleteCustomer;
 		}
 
 		function deleteEmployee($parameters){
-			$empName = $parameters['empName'];
-			$empNum = $parameters['empNum'];
+			$eid = $parameters['eid'];
+			if(!empty($eid))
+				$this->model->deleteEmployee($eid);
 		}
 		/**
 		 * Validate the input parameters, and if successful, and user does not exist,
@@ -251,10 +255,15 @@
 					foreach($inviteNames as $index=>$name){
 						$inviteID = $this->model->validationFactory->$inviteIDGenerator($eventID);
 						$this->model->sendInvites($name,$inviteEmail[$index],$eventID,$inviteID);
-						// TODO
-						// Code to send individual emails to invitees
+						include_once '../sendEmail.php';
 					}
 
+		}
+
+		function deleteEvent($parameters){
+			$eid = $parameters['ev_ID'];
+			if(! empty($eid))
+				$this->model->deleteEvent($eid);
 		}
 
 		function createParkingTicket($parameters){
@@ -363,21 +372,11 @@
 							
 		}
 
-		function makeOrder($parameters){
+		function makeAdmin($parameters){
 
-			$envs = $parameters["orderEnvs"];
-			$stickers = $parameters["orderStickers"];
-			$userPassword = $parameters["fPassword"];
-			$cost = ($envs*7)+($stickers*2);
-			$username = $this->model->authenticationFactory->getUsernameLoggedIn();
-			$date_ordered = date("Y/m/d");
-			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
-
-			if($this->model->authenticationFactory->passwordVerificationOfUserLoggedIn($userPassword)){
-				$this->model->makeOrder($username,$ponumber,$envs,$stickers,$date_ordered,$cost);}
-			else
-				return (false);
-
+			$eid = $parameters['eid'];
+			if(!empty($eid))
+				$this->model->makeAdmin($eid);
 		}
 
 
@@ -454,11 +453,12 @@
 			$empPinConf = $parameters["fPassConf"];
 			$date_joined = date("Y/m/d h:i:sa");
 			$companyID = $parameters['fCompanyName'];
+			$service = $parameters['fCompanyService'];
 			//$companyID = $this->model->validationFactory->getCompanyIDByName($companyName);
 			$empNum = $this->model->validationFactory->empNumGenerator();
 			
 			//All fields must be filled
-			if (! empty ( $firstName ) && ! empty ( $secondName ) && ! empty ( $email ) && ! empty ( $mobile ) && ! empty ( $address ) && ! empty ( $empPin ) && ! empty($date_joined) && ! empty($empNum)) {
+			if (! empty ( $firstName ) && ! empty ( $secondName ) && ! empty ( $email ) && ! empty ( $mobile ) && ! empty ( $address ) && ! empty ( $empPin ) && ! empty($date_joined) && ! empty($empNum) && ! empty($service) ){
 				/*
 				In this if statement , the controller checks various validity methods from the model. 
 				This is mainly to ensure that the new  email that the new user has entered does not match an existing user and that character lenght and casings are adequate
@@ -472,7 +472,7 @@
 								//...... is inserted to the database
 								// the hasRegistrationFailed methosd is assigned false so will not take affect 
 								//the user is notified of the completed insertion
-								if ($this->model->insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID)) {
+								if ($this->model->insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID,$service)) {
 									$this->model->hasRegistrationFailed = false;
 									$this->model->setConfirmationMessage();
 									return (true);
@@ -521,7 +521,7 @@
 						$databaseHashedPin = $this->model->getUserPinDigest($email);
 						$userHashedPin = $this->model->authenticationFactory->getHashValue($password);
 						
-						if($databaseHashedPin == $password){
+						if($databaseHashedPin == $userHashedPin){
 
 							$userId = $this->model->getAdminId ( $email );
 							$username = $this->model->getAdminUserName( $userId );

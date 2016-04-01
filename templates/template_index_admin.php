@@ -31,7 +31,6 @@
 									</ul>
 								</li>
 								<li class=""><a href='?adButton=liChangeCPPrice'>Change Parking Rate</a></li>
-								<li class=""><a href='#'>Add new Company</a></li>
 								<li class=""><a href='?adButton=liAddNewEmployee'>Add new Employee</a></li>
 								<li class=""><a href='?adButton=liPassChange' name="changePass">Change Pin</a></li>
 							</ul>
@@ -121,8 +120,8 @@
 								}
 								else 
 									echo $adLeftBox;
-							else if(isset($_POST['editUserDetailsP']))
-								include_once 'editUserDetails.php';
+							else if(isset($_POST['viewCustSearch']))
+								include_once 'searchresults.php';
 							else echo $adLeftBox ;
 						?>
 					</div>

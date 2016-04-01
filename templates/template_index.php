@@ -118,18 +118,20 @@
 
 						$userDropMenu;
 						
-						if (! empty($_GET['userValue'])) $userDropMenu = $_GET['userValue'];
-						else $userDropMenu = "";
+						if (! empty($_GET['userValue'])) $userView = $_GET['userValue'];
+						else $userView = "";
 
 						
 
-						if( isset($userDropMenu))
-							if($userDropMenu=='viewDetails')
+						if( isset($userView))
+							if($userView=='viewDetails')
 								include_once 'usersDetails.php';
-							else if($userDropMenu=='editDetails')
+							else if($userView=='editDetails')
 								include_once 'editUserDetails.php';
-							else if($userDropMenu=='allEventsForUser')
+							else if($userView=='allEventsForUser')
 								include_once 'view_all_events_for_user.php';
+							else if($userView=='viewEvent')
+								include_once 'viewEventDetails.php';
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
 						echo $leftBox ;

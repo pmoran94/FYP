@@ -95,10 +95,10 @@ class employeesDAO extends BaseDAO {
 
 	}
 
-	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID) {
+	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined,$empNum,$companyID, $service) {
 		
-		$sqlQuery = "INSERT INTO employees (fname,sname,dob,mobile,address,email,emp_no,emp_pin,date_employed,companyID) ";
-		$sqlQuery .= "VALUES ('$firstName','$secondName','$dob','$mobile','$address','$email','$empNum','$hashedPin','$date_joined','$companyID') ";
+		$sqlQuery = "INSERT INTO employees (fname,sname,dob,mobile,address,email,emp_no,emp_pin,date_employed,companyID,service) ";
+		$sqlQuery .= "VALUES ('$firstName','$secondName','$dob','$mobile','$address','$email','$empNum','$hashedPin','$date_joined','$companyID', '$service') ";
 		
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
@@ -169,12 +169,19 @@ class employeesDAO extends BaseDAO {
 
 	}
 
-	public function deleteEmp($empNum){
+	public function deleteEmployee($eid){
 		$sqlQuery = "DELETE FROM employees ";
-		$sqlQuery .= "WHERE emp_no = '$empNum' ";		
+		$sqlQuery .= "WHERE e_id = '$eid' ";		
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}		
+	public function makeAdmin($eid){
+		$sqlQuery = "UPDATE employees ";
+		$sqlQuery .= "SET is_admin='yes' ";
+		$sqlQuery .= "WHERE e_id='$eid' ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
 
 	
 	public function getUserPinDigest($empNum) {

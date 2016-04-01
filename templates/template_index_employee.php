@@ -57,7 +57,7 @@
 		<h3 class="text-center" ><?php echo $appName;?> </h3>
 		<ul class="sidebar-nav">
 			<li class="btn-block"><a href="?eUserValue=viewCustomerIssues">View Issues</a></li>
-			<li class="btn-block"><a href="?eUserValue=searchCustomers">Search Customers</a></li>
+			<li class="btn-block"><a href="?empButton=liSearchCustomers">Search Customers</a></li>
 			<li class="btn-block"><a href="?eUserValue=viewScannedCodes">View Scanned Data</a></li>
 		</ul>
 	</div>
@@ -89,8 +89,8 @@
 									include_once 'viewCustomer_issues.php';
 								else if($userDropMenu == 'scannedParkData')
 									include_once './readingParkingDataFile.php';
-								else if($userDropMenu == 'searchCustomers')
-									include_once 'search_form.php';
+							else if(isset($_POST['viewCustSearch']))
+								include_once 'searchresults.php';
 							else echo $empLeftBox;
 
 						?>

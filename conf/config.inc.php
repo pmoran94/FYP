@@ -1,4 +1,24 @@
 <?php
+
+
+/*
+
+	@author : Paul Moran 
+
+	Configuration file
+	------------------
+
+	Contains all constants throughout the system including database connection variables, error messages and confirmation messages.
+
+
+*/
+
+
+
+
+
+
+
 /*
 Assigning some fixed values which will be used throughout the whole application
 */

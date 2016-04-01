@@ -26,7 +26,7 @@ class View {
 		$registrationEmployeeForm = file_get_contents('./templates/insertNewEmployee_form.php',FILE_USE_INCLUDE_PATH);
 		$updateRecordForm = file_get_contents('./templates/update_record_form.php');
 		$newRecordForm = file_get_contents('./templates/insert_new_record.php');
-		$searchForm = file_get_contents('./templates/search_form.php');
+		$searchCusForm = file_get_contents('./templates/search_form.php');
 		$registerButton = file_get_contents('./templates/registrationButton.php');
 		$loggedInUserActions = file_get_contents('./templates/loggedInUserActions.php');
 		$issueReport = file_get_contents('./templates/reportIssue.php');
@@ -120,7 +120,8 @@ class View {
 						else if($empLink == 'liPassChange'){
 							$empLeftBox = $changePinForm;
 						}
-						else if($empLink == ''){
+						else if($empLink == 'liSearchCustomers'){
+							$empLeftBox = $searchCusForm;
 
 						}
 						
@@ -228,40 +229,18 @@ class View {
 			//$rightBox = "<img src='./images/cus1.jpe' alt='Customer'>"; 
 			$leftBox = "<img src='./images/envelope.png' alt='envelope'>";
 
-			
-			/*
-			if( $var_loggedIn == null){
-				include_once ("templates/template_index_login.php");
-			}
-			else{
-				if($var == null){
-					if($this->model->isUserLoggedInAdmin()){
-						$introTop = $username . " : " . $empnumber;
-						include_once'./templates/template_index_admin.php';
-					}
-					else{
-						$introTop = $username . " : " . $empnumber;
-						include_once'./templates/template_index_employee.php';
-					}
-				}
-				else{
-					$introTop = $username . " : " . $ponumber;
-					include_once'./templates/template_index.php';
-				}
-
-
-			}*/
+		
 
 			include_once ("templates/template_index_login.php");
-			/*
+			
 			if (! isset ( $this->model->hasRegistrationFailed )) {
-				$rightBox = $registrationForm;
+				$leftBox = $registrationForm;
 			} else if ($this->model->hasRegistrationFailed) {
-				$rightBox = $newUserErrorMessage . $registrationForm;
+				$leftBox = $newUserErrorMessage . $registrationForm;
 			} else if ($this->model->hasRegistrationFailed == false) {
 				$confirmationMessage = "<div class='alert alert-success'>" . $this->model->signUpConfirmation . "</div>";
-				$rightBox = $confirmationMessage;
-			}*/
+				$leftBox = $confirmationMessage;
+			}
 			
 		}
 		

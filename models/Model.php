@@ -15,7 +15,7 @@ include_once 'authentication_factory.php';
 class Model {
 	public $DAO_Factory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$searchResults="",$allCompanyNames=""; // strings
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$eventDetails="",$searchResults="",$allCompanyNames=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
 	
@@ -63,8 +63,8 @@ class Model {
 	public function compareEmailToPO($ponumber){
 		return ($this->customersDAO->retEmailOfPONum($ponumber));
 	}
-	public function deleteUser($email){
-		$this->customersDAO->deleteUser($email);
+	public function deleteCustomer($custID){
+		return $this->customersDAO->deleteUCustomer($custID);
 	}
 	public function changePassword($hashNewPass,$userId){
 		$this->customersDAO->changePassword($hashNewPass,$userId);
@@ -89,17 +89,20 @@ class Model {
 	public function getAdminUserName($userId){
 		return ($this->employeesDAO->getAdminUserName($userId));
 	}
-	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin , $date_joined, $empNum ,$companyID) {	
-		return ($this->employeesDAO->insertNewEmployee($firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined, $empNum,$companyID));
+	public function insertNewEmployee( $firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin , $date_joined, $empNum ,$companyID, $service) {	
+		return ($this->employeesDAO->insertNewEmployee($firstName,$secondName,$dob,$mobile,$address,$email, $hashedPin,$date_joined, $empNum,$companyID, $service));
 	}
-	public function deleteEmployee($username){
-		$this->employeesDAO->deleteEmployee($username);
+	public function deleteEmployee($eid){
+		$this->employeesDAO->deleteEmployee($eid);
 	}
 	public function changePin($hashNewPin,$userId){
 		$this->employeesDAO->changePin($hashNewPin,$userId);
 	}
 	public function getAllCompanyNames(){
 		$this->allCompanyNames = $this->authenticationFactory->getAllCompanyNames();
+	}
+	public function makeAdmin($eid){
+		return $this->employeesDAO->makeAdmin($eid);
 	}
 	/*
 		OTHER METHODS TO BE FIXED
@@ -128,6 +131,12 @@ class Model {
 		$this->allEventsForUser = $this->qrticketsDAO->getAllEventsForUser($uid,$userEmail);
 	}
 
+	public function getAllDetailsForEvent($eid){
+		$this->eventDetails = $this->qrticketsDAO->getAllDetailsForEvent($eid);
+	}
+	public function deleteEvent($eid){
+		$this->qrticketsDAO->deleteEvent($eid);
+	}
 	public function getUserDetails(){
 
 		$uid;

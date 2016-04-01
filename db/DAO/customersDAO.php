@@ -24,10 +24,10 @@ class customersDAO extends BaseDAO {
 	}
 
 	public function searchResults($parameters){
-		$sqlQuery = "SELECT CONCAT(fname,' ',sname) AS name,cmobile,cemail,caddr,ponumber,carRegistration,date_joined ";
+		$sqlQuery = "SELECT id, CONCAT(fname,' ',sname) AS name,cmobile,cemail,caddr,ponumber,carRegistration,date_joined ";
 		$sqlQuery .= "FROM customers ";
-		$sqlQuery .= "WHERE ponumber";
-		$sqlQuery .= "like '%$parameters%' OR name like '%$parameters%' OR cemail like '%$parameters%' OR caddr like '%$parameters%' OR carRegistration like '%$parameters%'  ";
+		$sqlQuery .= "WHERE ponumber ";
+		$sqlQuery .= "like '%$parameters%' OR sname like '%$parameters%' OR fname like '%$parameters%' OR cemail like '%$parameters%' OR caddr like '%$parameters%' OR carRegistration like '%$parameters%'  ";
 		
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 		return $result;
@@ -199,11 +199,12 @@ class customersDAO extends BaseDAO {
 		return $result; 
 	}
 	
-	public function deleteUser($email){
+	public function deleteCustomer($custID){
 		$sqlQuery = "DELETE FROM customers ";
-		$sqlQuery .= "WHERE cemail = '$email' ";		
+		$sqlQuery .= "WHERE id = '$custID' ";		
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
 	}
 		
 		
