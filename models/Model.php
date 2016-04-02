@@ -41,6 +41,7 @@ class Model {
 		CUSTOMER LOG IN METHODS
 	*/
 
+
 	public function loginUser($userId, $username,$isUserEmploy) {
 		$this->authenticationFactory->loginUser ( $userId, $username,$isUserEmploy);
 	}

@@ -25,10 +25,9 @@
 
 
 
-$timestamp = date("Y/m/dh:i:sa");
 $currentUserId = $_GET['ponumber'];
 $ticketID = $_GET['ticketID'];
-
+$eventID = $_GET['eventID'];
 
 
 
@@ -38,7 +37,7 @@ if($qrPurpose == 'cpark'){
     $ticket = genCparkData($currentUserId,$timestamp,$ticketID);
 }
 else if($qrPurpose == 'event'){
-    $ticket = genStampData($currentUserId,$timestamp,$ticketID);
+    $ticket = genStampData($currentUserId,$timestamp,$ticketID,$eventID);
 }
 else if($qrPurpose == 'stamp'){
     $ticket = genStampData($currentUserId,$timestamp,$ticketID);
@@ -51,17 +50,17 @@ else
 function genStampData($currentUserId,$timestamp,$ticketID){
     $ticketType = "STAMP";
 
-    return $ticketType . $currentUserId . $timestamp;
+    return $ticketType . $currentUserId . $ticketID . '\n';
 }
 function genCparkData($currentUserId,$timestamp,$ticketID){
     $ticketType = "CPARK";
 
-    return $ticketType . $currentUserId . $timestamp;
+    return $ticketType . $currentUserId . $ticketID . '\n';
 }
-function genEventData(){
+function genEventData($currentUserId,$timestamp,$ticketID, $eventID){
     $ticketType = "EVENT";
 
-    return true;
+    return $ticketType . $currentUserId . $eventID . $ticketID . '\n' ;
 }
 
 

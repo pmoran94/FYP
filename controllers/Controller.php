@@ -107,7 +107,7 @@
 			$this->model->getAllDetailsForEvent($e__ID);
 			$this->model->getAllCompanyNames();
 		}
-		
+
 		function stripePayment($parameters){
 			\Stripe\Stripe::setApiKey("sk_test_8mEEBKrOnvUrMtDpQGBUBnri ");
 
@@ -238,6 +238,7 @@
 			$inviteType=$parameters["inviteType"];
 			$eventID=$this->model->validationFactory->eventIDGenerator();
 			$dateOfCreation = date('Y/m/d H:i:s');
+			$ticketID = "";
 
 
 			$message = "You are invited to my event!";
@@ -253,9 +254,10 @@
 			//if(strtotime($eventDate>$dateOfCreation))
 				if($this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation))
 					foreach($inviteNames as $index=>$name){
-						$inviteID = $this->model->validationFactory->$inviteIDGenerator($eventID);
-						$this->model->sendInvites($name,$inviteEmail[$index],$eventID,$inviteID);
-						include_once '../sendEmail.php';
+						$ticketID = $this->model->validationFactory->inviteIDGenerator($eventID);
+						$this->model->sendInvites($name,$inviteEmail[$index],$eventID,$ticketID);
+						include_once './callQRGenerator.php';
+						include_once './mailgun-php-1.7.1/mailgun-php/sendEmail.php';
 					}
 
 		}
@@ -276,6 +278,7 @@
 			$dateOfCreation = date('Y/m/d h:i:s');
 			$ticketID = $this->model->validationFactory->qrcodeIDGenerator();
 			$qrType = "CPARK";
+			$eventID = null;
 			$password = $parameters['fPassword'];
 			$hashedPassword = $this->model->authenticationFactory->getHashValue($password);
 			$dbpassword = $this->model->authenticationFactory->passwordOfUserLoggedIn();
@@ -356,6 +359,7 @@
 			$weight = $parameters["weight"];
 			$type = $parameters["type"];
 			$qrType = "STAMP";
+			$eventID = null;
 			$ticketID = $this->model->validationFactory->qrcodeIDGenerator();
 			$dateCreated = date('Y/m/d h:i:s');
 			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();

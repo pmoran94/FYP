@@ -30,7 +30,7 @@
 										<li><a href="?eUserValue=editDetails"><span class="glyphicon glyphicon-cog"></span>Edit Profile</a></li>
 									</ul>
 								</li>
-								<li class=""><a href='?eUserValue=scannedParkData'>___Open Parking Data___</a></li>
+								<li class=""><a href='?eUserValue=newScannedData'>___Load New Scanned Data___</a></li>
 								<li class=""><a href='?empButton=lireportIssue'>Report Issue</a></li>
 								<li class=""><a href='?empButton=liPassChange' name="changePass">Change Pin</a></li>
 							</ul>
@@ -89,6 +89,8 @@
 									include_once 'viewCustomer_issues.php';
 								else if($userDropMenu == 'scannedParkData')
 									include_once './readingParkingDataFile.php';
+								else if($userDropMenu)
+									include_once './readExcel.php';
 							else if(isset($_POST['viewCustSearch']))
 								include_once 'searchresults.php';
 							else echo $empLeftBox;
