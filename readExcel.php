@@ -1,7 +1,9 @@
 <?php
 
+include_once 'models/Model.php';
 
-ini_set("display_errors",1);
+$model = new model();
+
 
 //include_once 'db/simple_db_manager.php';
 $db_link = mysqli_connect('localhost','root','','FYP');
@@ -23,6 +25,7 @@ $objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');
 			if(strlen($name>18)) $eventID = $db_link->real_escape_string(substr($name,19,7));
 		   	else $eventID = null;
 
+		   	$test = $model->getAdminID(123455);
 		   	//FIRST CHECK IF THE TICKET ID IS IN THE DATABASE ALREADY
 
 		   	// check the ticket type 
@@ -53,12 +56,13 @@ $objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');
            $html .= '<td>'.$ponumber.'</td>';  
            $html .= '<td>'.$ticketID.'</td>';
            $html .= '<td>'.$eventID.'</td>';
-           $html .= '<td>'.$validity.'</td>';
+           $html .= '<td>'.$test.'</td>';
            $html .= '<td>'.$fail_reason.'</td>';
            $html .= "</tr>";  
       }  
  }  
  $html .= '</table>';  
  echo $html;  
- echo '<br />Data Inserted';  
- ?>  
+ echo '<br />Data Inserted';
+
+?>  
