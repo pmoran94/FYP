@@ -99,9 +99,7 @@ class Model {
 	public function changePin($hashNewPin,$userId){
 		$this->employeesDAO->changePin($hashNewPin,$userId);
 	}
-	public function getAllCompanyNames(){
-		$this->allCompanyNames = $this->authenticationFactory->getAllCompanyNames();
-	}
+
 	public function makeAdmin($eid){
 		return $this->employeesDAO->makeAdmin($eid);
 	}
@@ -220,7 +218,23 @@ class Model {
 		return ($this->qrticketsDAO->insertIntoQRTable($qrType,$stampID));
 	}
 
+	public function getEmployeeService($service){
+		
+		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
+		else $uid = "";
+
+		return($this->employeesDAO->getEmployeeService($uid,$service));
+	}
 	
+	public function hasTicketBeenScanned($ticketType,$ticketID){
+		if($ticketType == "STAMP"){
+			
+		}
+		else{
+			
+		}
+	}
+
 	public function prepareIntroMessage() {
 		/*
 		-- Method to get the intro message gotten from the config.inc.php script

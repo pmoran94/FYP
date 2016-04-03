@@ -23,13 +23,7 @@ class employeesDAO extends BaseDAO {
 			return (false);}
 	}
 
-	public function getAllCompanyNames(){
-		$sqlQuery = "SELECT company_name ";
-		$sqlQuery .= "FROM companies ";
-		$result = $this->getDbManager()->executeQuery($sqlQuery);
 
-		return $result;
-	}
 
 
 	public function changePin($hashNewPin,$userId){
@@ -39,6 +33,16 @@ class employeesDAO extends BaseDAO {
 		$sqlQuery .= "WHERE e_id='$userId' ";
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 
+	}
+
+	public function getEmployeeService($uid,$service){
+		$sqlQuery = "SELECT service ";
+		$sqlQuery .= "FROM employees ";
+		$sqlQuery .= "WHERE service='$service' ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		if ($result != NULL) return $result[0]["service"];
+		return (NULL);
 	}
 
 	public function getUserPin($e_id){

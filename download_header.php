@@ -11,12 +11,10 @@
 		
 		$PNG_WEB_DIR = 'phpqrcode/temp/';
 		include_once '/phpqrcode/temp/getLastCreatedPNG.php';
-
-		echo "<img src=phpqrcode/temp/'" . $QRTicket. "' style=height:140px; width:140px; margin-left:auto; margin-right:auto; display:block>" ;
-		echo $QRTicket;
-
+		
 	?>
 
+	<img src='phpqrcode/temp/64407042c96bda6fa254faa536276b52646c26a.png' style=height:140px;width:140px;margin-left:auto;margin-right:auto;display:block> ;
 	<p>
 		<h3>To save your ticket...</h3>
 		<h4>1). Right-Click on image.<br>2). Go to Save image as...<br>3). Choose where to save your file.</h4>

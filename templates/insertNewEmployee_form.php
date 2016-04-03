@@ -41,9 +41,9 @@ Please fill in all fields.
 		<p>
 			<label for="fCompanyService">Provided Service</label>
 			<select type='radio' name='fCompanyService'>
-				<option value='stamp'>Postal Service</option>
-				<option value='cpark'>Car Park Service</option>
-				<option value='event'>Event Staff</option>
+				<option value='STAMP'>Postal Service</option>
+				<option value='CPARK'>Car Park Service</option>
+				<option value='EVENT'>Event Staff</option>
 			</select>
 		</p>
 		<p>

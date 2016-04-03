@@ -25,7 +25,13 @@ $objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');
 			if(strlen($name>18)) $eventID = $db_link->real_escape_string(substr($name,19,7));
 		   	else $eventID = null;
 
-		   	$test = $model->getAdminID(123455);
+		   	$service = $model->getEmployeeService($ticketType);
+
+		   	if ($service == $ticketType || $service == "")
+		   		if($model->hasTicketBeenScanned($ticketType,$ticketID))
+		   			
+		   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
+
 		   	//FIRST CHECK IF THE TICKET ID IS IN THE DATABASE ALREADY
 
 		   	// check the ticket type 
