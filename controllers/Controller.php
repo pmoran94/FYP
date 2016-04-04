@@ -105,6 +105,7 @@
 			$this->model->getAllParkingTickets();
 			$this->model->getAllEventsForUser();
 			$this->model->getAllDetailsForEvent($e__ID);
+			$this->model->getScannedDataForEmployee(); 
 			
 		}
 

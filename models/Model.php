@@ -15,7 +15,7 @@ include_once 'authentication_factory.php';
 class Model {
 	public $DAO_Factory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$eventDetails="",$searchResults="",$allCompanyNames=""; // strings
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$eventDetails="",$searchResults="",$allCompanyNames="",$getScannedDataForEmployee=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
 	
@@ -227,12 +227,30 @@ class Model {
 	}
 	
 	public function hasTicketBeenScanned($ticketType,$ticketID){
-		if($ticketType == "STAMP"){
-			
-		}
-		else{
-			
-		}
+		return($this->qrticketsDAO->hasTicketBeenScanned($ticketID));
+	}
+	public function validLastScanTimeInterval($ticketID){
+		$currentTime = date('Y-m-d h:i:s');
+		return($this->validationFactory->validLastScanTimeInterval($ticketID,$currentTime));
+		
+
+	}
+	public function getScannedDataForEmployee(){
+		if(! empty($_SESSION['user_id'])) $eid = $_SESSION['user_id'];
+		else $eid ='';
+		$this->getScannedDataForEmployee = $this->qrticketsDAO->getScannedDataForEmployee($eid);
+	}
+
+	public function isStampExpiryTimeValid($ticketID){
+		return true;
+	}
+
+	public function hasCParkExpiryTimeBeenReached($ticketID){
+		return($this->validationFactory->hasCParkExpiryTimeBeenReached($ticketID));
+	}
+
+	public function hasValidPaymentBeenMade($ticketID){
+		return($this->qrticketsDAO->hasValidPaymentBeenMade($ticketID));
 	}
 
 	public function prepareIntroMessage() {

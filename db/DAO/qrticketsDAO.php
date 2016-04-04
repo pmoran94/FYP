@@ -16,8 +16,56 @@ class qrticketsDAO extends BaseDAO {
 
 		if($result !=null) return true;
 		else return false;
+	}
 
+	public function getScannedDataForEmployee($eid){
+		$sql = "SELECT service from employees WHERE e_id='$eid' ";
+		$res = $this->getDbManager()->executeSelectQuery($sql);
 
+		if(!empty($this->getDbManager()->executeSelectQuery($sql))) $res[0]['service'] = $this->getDbManager()->executeSelectQuery($sql);
+		else $res[0]['service'] = null;
+
+		if($res[0]['service'] !=null){
+			$sqlQuery = "SELECT * ";
+			$sqlQuery .= "FROM scanned_data ";
+			$sqlQuery .= "WHERE ticketType IN ";
+			$sqlQuery .= "(SELECT service FROM employees WHERE e_id='$eid' )";
+		}
+		else {
+			$sqlQuery = "SELECT * ";
+			$sqlQuery .= "FROM scanned_data ";
+		}		
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		return $result;
+
+	}
+
+	public function hasTicketBeenScanned($ticketID){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM scanned_data ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result != null) return true;
+		else return false;
+	}
+
+	public function getCParkExpiryTime($ticketID){
+		$sqlQuery = "SELECT date_of_expiry ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "where ticketID='$ticketID' ";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		if($result != null) return $result[0]['date_of_expiry'];
+		else return false; 
+	}
+
+	public function hasValidPaymentBeenMade($ticketID){
+		$sqlQuery = "SELECT has_paid ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID='$ticketID' ";
+		if($result[0]['has_paid'] == 'yes') return true;
+		else return false;
 	}
 
 	public function getCurrentParkingPrice(){

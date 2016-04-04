@@ -24,7 +24,16 @@ class validation_factory {
 		if(!preg_match($regex, $emailStr)) return (false);
 		else return (true);
 	}
+	public function validLastScanTimeInterval($ticketID,$currentTime){
+		// check that the time interval between the two scans is greater than 24 hours
+		return true;
+	}
 
+	public function hasCParkExpiryTimeBeenReached($ticketID){
+		$currentTime = date('Y-m-d h:i:s');
+		if($this->qrticketsDAO->getQRExpiryTime($ticketID)>=$currentTime) return true;
+		return false;
+	}
 
 	public function IsTicketActive($ticketID){
 		return($this->qrticketsDAO->IsTicketActive($ticketID));

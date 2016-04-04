@@ -8,67 +8,129 @@ $model = new model();
 //include_once 'db/simple_db_manager.php';
 $db_link = mysqli_connect('localhost','root','','FYP');
 include_once 'PHPExcel/Classes/PHPExcel/IOFactory.php';  
-$html="<table border='1'>";  
+$html=" <h2>Affected Data</h2><br>
+		<table border='1'>";  
 $objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');  
- foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)   
- {  
-      $highestRow = $worksheet->getHighestRow();  
-      for ($row=1; $row<=$highestRow; $row++)  
-      {  
-           $html.="<tr>";  
-           $name = mysqli_real_escape_string($db_link, $worksheet->getCellByColumnAndRow(0, $row)->getValue());  
-          
-           $ticketType = $db_link->real_escape_string(substr($name,0,5));
-		   $ticketID = $db_link->real_escape_string(substr($name,12,7));
-		   $ponumber = $db_link->real_escape_string(substr($name,5,7));
+foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)   
+{  
+    $highestRow = $worksheet->getHighestRow();  
+    for ($row=1; $row<=$highestRow; $row++)  
+    {  
+        $html.="<tr>";  
+        $name = mysqli_real_escape_string($db_link, $worksheet->getCellByColumnAndRow(0, $row)->getValue());  
+      
+        $ticketType = $db_link->real_escape_string(substr($name,0,5));
+   	    $ticketID = $db_link->real_escape_string(substr($name,12,7));
+ 	    $ponumber = $db_link->real_escape_string(substr($name,5,7));
 
-			if(strlen($name>18)) $eventID = $db_link->real_escape_string(substr($name,19,7));
-		   	else $eventID = null;
+		if(strlen($name>18)) $eventID = $db_link->real_escape_string(substr($name,19,7));
+	   	else $eventID = null;
 
-		   	$service = $model->getEmployeeService($ticketType);
+	   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
+	   	$service = $model->getEmployeeService($ticketType);
 
-		   	if ($service == $ticketType || $service == "")
-		   		if($model->hasTicketBeenScanned($ticketType,$ticketID))
-		   			
-		   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
+	   	$callDBQuery="";
+	   	$updateTIDValidity='';
 
-		   	//FIRST CHECK IF THE TICKET ID IS IN THE DATABASE ALREADY
+	   	if($service == $ticketType || $service == ""){
+	   		if($ticketType == 'STAMP'){
+	   			$validity =""; //checkStamp($ticketType,$ticketID,$callDBQuery,$updateTIDValidity);	
+	   		}
+	   		else if($ticketType == 'CPARK'){
+	   			$validity = "";//checkCPark($ticketType,$ticketID,$callDBQuery,$updateTIDValidity);
+	   		}
+	   		else if($ticketType == 'EVENT'){
+	   			$validity = "";//checkEvent($ticketType,$ticketID,$eventID,$callDBQuery,$updateTIDValidity);
+	   		}
+	   		else
+	   			die('Invalid parameter passed for Ticket Type');
+	   	}
+	   			
 
-		   	// check the ticket type 
-		   		//call appropriate function for that type
-		   	// EVENT -  has ticket been scanned already
-		   	// EVENT - is Event Active
-		   	// Event - does the ticket match that event
-		   	// Prompt ticket holder for ID
+        $sql = "INSERT INTO scanned_data(ticketType,ponumber,ticketID,eventID,validity) VALUES ('".$ticketType."', '".$ponumber."', '".$ticketID."','".$eventID."','".$validity."')"; 
 
-		   	//STAMP -  Is it the first time its been scanned
-		   	// HAS IT BEEN PAID FOR
-		   	// PROMPT FOR WEIGHT , DESTINATION,TYPE
-		   	// IF ITS THE SECOND AND THE TIME IT WAS FIRST SCANNED WAS THE SAME DAY THEN DONT ACCEPT
+        $sqlUpd = "UPDATE scanned_data SET validity='false' WHERE ticketID = '".$updateTIDValidity."'";
 
-		   	// IS THE EXPIRY TIME STILL DUE
-		   	// HAS THERE BEEN A PAYMENT
+       	if($callDBQuery == 'insert')
+       		mysqli_query($db_link, $sql);
+       	else if($callDBQuery == 'update')
+       		mysqli_query($db_link,$sqlUpd);  
+      
 
-		   	$validity = true;
-		   	$fail_reason = "";
+        $html.= '<td>'.$ticketType.'</td>';  
+        $html .= '<td>'.$ponumber.'</td>';  
+        $html .= '<td>'.$ticketID.'</td>';
+        $html .= '<td>'.$eventID.'</td>';
+        $html .= '<td>'.$validity.'</td>';
+        $html .= "</tr>";  
+ 	}  
+
+function checkStamp($ticketType,$ticketID,&$callDBQuery,&$updateTIDValidity){
+	if($model->hasTicketBeenScanned($ticketType,$ticketID)){
+		$callDBQuery = null;
+		if($model->validLastScanTimeInterval($ticketID)){
+			return true;
+		}
+		else{
+			$callDBQuery = 'update';
+			$updateTIDValidity=$ticketID;
+			return false;
+		}
+	}
+	else{ 
+		$callDBQuery = 'insert';
+		if($model->isStampExpiryTimeValid($ticketID)){
+			return true;
+		}
+		else{
+			$updateTIDValidity = $ticketID;
+			return false;
+		}
+	}
+}
 
 
+function checkCPark($ticketType,$ticketID,&$callDBQuery,&$updateTIDValidity){
+	if($model->hasTicketBeenScanned($ticketType,$ticketID)){
+		$callDBQuery = null;
+		if(! $model->hasCParkExpiryTimeBeenReached($ticketID)){
+			return true;
+		}
+		else{
+			$callDBQuery='update'; 
+			$updateTIDValidity=$ticketID;
+			return false;
+		}
+	}
+	else
+	{ 
+		$callDBQuery = 'insert';
+		if($model->hasValidPaymentBeenMade)
+			if(! $model->hasCParkExpiryTimeBeenReached($ticketID))
+				return true;
+		return false;
+	}
+}
 
-           $sql = "INSERT INTO scanned_data(ticketType,ponumber,ticketID,eventID,validity,fail_reason) VALUES ('".$ticketType."', '".$ponumber."', '".$ticketID."','".$eventID."','".$validity."','".$fail_reason."')";  
-           mysqli_query($db_link, $sql);  
-          
 
-           $html.= '<td>'.$ticketType.'</td>';  
-           $html .= '<td>'.$ponumber.'</td>';  
-           $html .= '<td>'.$ticketID.'</td>';
-           $html .= '<td>'.$eventID.'</td>';
-           $html .= '<td>'.$test.'</td>';
-           $html .= '<td>'.$fail_reason.'</td>';
-           $html .= "</tr>";  
-      }  
- }  
- $html .= '</table>';  
- echo $html;  
- echo '<br />Data Inserted';
+function checkEvent($ticketType,$ticketID,$eventID,&$callDBQuery,&$updateTIDValidity){
+	if( ! $model->hasTicketBeenScanned($ticketType,$ticketID)){
+		$callDBQuery = 'insert';
+		if($model->eventIDmatchesEvent($eventID))
+			if($model->eventIsActive)
+				if($model->eventIsToday)
+					return true;
+	}
+	else{
+		$callDBQuery = 'update';
+		$updateTIDValidity = $ticketID;
+		return false;
+	}
+}
+
+}  
+$html .= '</table>';  
+echo $html;  
+echo "<br /><a href='?eUserValue=viewScannedData'><button class='btn btn-warning'>View Scanned Data</button>";
 
 ?>  
