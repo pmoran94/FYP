@@ -28,9 +28,6 @@
 $currentUserId = $_GET['ponumber'];
 $ticketID = $_GET['ticketID'];
 $eventID = $_GET['eventID'];
-
-
-
 $qrPurpose = $_GET['genButton'];
 
 if($qrPurpose == 'cpark'){
@@ -42,10 +39,9 @@ else if($qrPurpose == 'event'){
 else if($qrPurpose == 'stamp'){
     $ticket = genStampData($currentUserId,$timestamp,$ticketID);
 }
-else
+else{
     $ticket = "";
-
-
+}
 
 function genStampData($currentUserId,$timestamp,$ticketID){
     $ticketType = "STAMP";
@@ -64,7 +60,7 @@ function genEventData($currentUserId,$timestamp,$ticketID, $eventID){
 }
 
 
-    echo "<h1>PHP QR Code --  " . $ticket . "</h1><hr/>";
+    //echo "<h1>PHP QR Code --  " . $ticket . "</h1><hr/>";
     
     //set it to writable location, a place for temp generated PNG files
     $PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;

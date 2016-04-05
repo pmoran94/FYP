@@ -10,6 +10,11 @@ class View {
 		$this->controller = $controller;
 		$this->model = $model;
 	}
+	/*
+		The following function is called in the index.php. 
+
+		It controlls the output onto the screen
+	*/ 
 	public function output() {
 		// set variables up from the model (for the template)
 		$appName = $this->model->appName;

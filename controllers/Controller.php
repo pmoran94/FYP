@@ -1,9 +1,29 @@
 <?php
+/**
+	@author : Paul Moran
+
+	@title : Controller
+
+	@date : 23/09/2015
+
+	Controls the actions and  methods called based on a the user's interaction with the system.
+
+	@param : $parameters submitted to the index.php from HTML forms or other means are passed into the controller as a '$parameters' array.
+
+	@param : 'action' determines the methods called in the switch statement.
+
+	@param : 'model' : The model class is instantiated, where after where after the parameters are checked and validated they are passed to the model.
+
+*/
  
 	class Controller {
 		private $model;
 		/*
 		Switch Statement declared to choose which action is been used by the user
+
+		The action is defined by a hidden input field in a form. It determines the method called within the controller.
+
+		An instance of the model is instantiated, where after the parameters are checked and validated they are passed to the model.
 		*/
 		public function __construct($model, $action = null, $parameters) {
 			$this->model = $model;
@@ -421,7 +441,7 @@
 										/*
 											This script is included to send SMS message to new user, using the mobile number they provided.
 										*/
-										 //include_once './sendSMS.php';
+										include_once './sendSMS.php';
 										return (true);
 										
 									}

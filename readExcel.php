@@ -1,4 +1,19 @@
 <?php
+/*
+
+	@Author : Paul Moran
+
+	@Date :  25/02/2016
+
+	Script to read data from Excel file. 
+	This data is broken up and validated using multiple checks from within the newly instantiated model.
+
+	The overall result is pushed to the database along with a ticket to say whether or not the data scanned is valid or invalid.
+
+	This file also ensures that not any employee scan any QR code.
+
+
+*/
 
 include_once 'models/Model.php';
 
@@ -45,7 +60,7 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 	   		else
 	   			die('Invalid parameter passed for Ticket Type');
 	   	}
-	   			
+	   		   			
 
         $sql = "INSERT INTO scanned_data(ticketType,ponumber,ticketID,eventID,validity) VALUES ('".$ticketType."', '".$ponumber."', '".$ticketID."','".$eventID."','".$validity."')"; 
 

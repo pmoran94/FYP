@@ -1,4 +1,11 @@
 <?php
+/*
+
+	This script uses the mailgun API to send emails.
+
+	This is used to send the invites for each event.
+	
+*/
 
 
 //Include the Autoloader (see "Libraries" for install instructions)

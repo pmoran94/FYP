@@ -1,13 +1,20 @@
 <?php
+/*	
 
-//preg_match("/PHP/", "PHP")
+	Author @: Paul Moran
+	
+	The following code is used to find the correct QR code to be displayed after 
+	generation based on the ticketID.
+	
+*/
+
+$ticketToDisplay;
 
 $path = 'temp/'; 
-foreach (new DirectoryIterator('.') as $file) {
-    if(strpos($file->getFilename(),'996f') !== false) 
+foreach (new DirectoryIterator($path) as $file) {
+    if(strpos($file->getFilename(),$ticketID) !== false) 
     	echo $file->getFilename() . '<br>';
+    	$ticketToDisplay = $file->getFilename();
     	
 }
-//if (strpos("bfsbfksbfksbfkbPaulMorandfkgj.php", 'kbPauk') !== false) echo 'true';
-//else echo 'false';
 ?>

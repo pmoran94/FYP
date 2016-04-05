@@ -20,10 +20,10 @@ class qrticketsDAO extends BaseDAO {
 
 	public function getScannedDataForEmployee($eid){
 		$sql = "SELECT service from employees WHERE e_id='$eid' ";
-		$res = $this->getDbManager()->executeSelectQuery($sql);
+		$res;
 
-		if(!empty($this->getDbManager()->executeSelectQuery($sql))) $res[0]['service'] = $this->getDbManager()->executeSelectQuery($sql);
-		else $res[0]['service'] = null;
+		if(!empty($this->getDbManager()->executeSelectQuery($sql))) $res = $this->getDbManager()->executeSelectQuery($sql);
+		else $res = null;
 
 		if($res[0]['service'] !=null){
 			$sqlQuery = "SELECT * ";

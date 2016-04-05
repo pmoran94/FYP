@@ -1,6 +1,8 @@
 <?php
 /*
 The following script is executed to send a text message to a user when needed.
+
+The message parameter is left blank here due to the limitations applied to the test account registered for this project.
 */ 
 
 $message = "";
@@ -23,3 +25,5 @@ curl_exec($ch);
 curl_close($ch);
 
 ?>
+
+
