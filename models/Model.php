@@ -203,6 +203,7 @@ class Model {
 	public function getCurrentParkingPrice(){
 		return($this->qrticketsDAO->getCurrentParkingPrice());
 	}
+
 	public function updateParkingPrice($price){
 		return($this->qrticketsDAO->updateParkingPrice($price));
 	}
@@ -226,15 +227,6 @@ class Model {
 		return($this->employeesDAO->getEmployeeService($uid,$service));
 	}
 	
-	public function hasTicketBeenScanned($ticketType,$ticketID){
-		return($this->qrticketsDAO->hasTicketBeenScanned($ticketID));
-	}
-	public function validLastScanTimeInterval($ticketID){
-		$currentTime = date('Y-m-d h:i:s');
-		return($this->validationFactory->validLastScanTimeInterval($ticketID,$currentTime));
-		
-
-	}
 	public function getScannedDataForEmployee(){
 		if(! empty($_SESSION['user_id'])) $eid = $_SESSION['user_id'];
 		else $eid ='';
@@ -252,6 +244,75 @@ class Model {
 	public function hasValidPaymentBeenMade($ticketID){
 		return($this->qrticketsDAO->hasValidPaymentBeenMade($ticketID));
 	}
+
+
+
+
+	/*
+	
+		Methods For When a STAMP is Scanned!
+	
+	*/
+
+	public function insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity){
+		$this->qrticketsDAO->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+	}
+	public function isStampActive($ticketID){
+		return($this->validationFactory->isStampActive($ticketID));
+	}
+
+ 	public function didSecondEmployeeScan($ticketID){
+ 		$uid = $_SESSION['user_id'];
+ 		$empNo = $this->employeesDAO->getEmpNumberLoggedIn($uid);
+		return($this->validationFactory->didSecondEmployeeScan($empNo,$ticketID));
+	}
+
+	public function deactivateStampInStampsTable($ticketID){
+		$this->qrticketsDAO->deactivateStampInStampsTable($ticketID);
+	}
+
+	public function updateTIDValidityApprove($ticketID){
+		$this->qrticketsDAO->updateTIDValidityApprove($ticketID);
+	}
+
+	public function updateTIDValidityCheckDestination($ticketID){
+		$this->qrticketsDAO->updateTIDValidityCheckDestination($ticketID);
+	}
+
+	public function hasTicketBeenScannedBefore($ticketID){
+		return($this->qrticketsDAO->hasTicketBeenScanned($ticketID));
+	}
+
+	public function updateScanOnDepart($ticketID){
+		$uid = $_SESSION['user_id'];
+		$empNo = $this->employeesDAO->getEmpNumberLoggedIn($uid);
+		$this->qrticketsDAO->updateScanOnDepart($ticketID,$empNo);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	*	System Log in Methods
+	*
+	*
+	*
+	*
+	*/
 
 	public function prepareIntroMessage() {
 		/*

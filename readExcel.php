@@ -14,6 +14,7 @@
 
 
 */
+if(empty($_SESSION['user_id'])) die('Must be Logged in to see this page');
 
 include_once 'models/Model.php';
 
@@ -25,6 +26,8 @@ $db_link = mysqli_connect('localhost','root','','FYP');
 include_once 'PHPExcel/Classes/PHPExcel/IOFactory.php';  
 $html=" <h2>Affected Data</h2><br>
 		<table border='1'>";  
+$validity = "";
+$callDBQuery="";
 $objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');  
 foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)   
 {  
@@ -44,21 +47,81 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 	   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
 	   	$service = $model->getEmployeeService($ticketType);
 
-	   	$callDBQuery="";
 	   	$updateTIDValidity='';
 
 	   	if($service == $ticketType || $service == ""){
 	   		if($ticketType == 'STAMP'){
-	   			$validity =""; //checkStamp($ticketType,$ticketID,$callDBQuery,$updateTIDValidity);	
+	   			if($model->isStampActive($ticketID)){
+		   			if($model->hasTicketBeenScannedBefore($ticketID)){
+						if($model->didSecondEmployeeScan($ticketID)){
+							$model->deactivateStampInStampsTable($ticketID);
+							$model->updateTIDValidityApprove($ticketID);
+						}
+						else{
+							$model->updateTIDValidityCheckDestination($ticketID);
+						}
+					}
+					else{
+						/*
+							This should be first check for a valid in-date ticket less than 2 weeks old.
+						*/ 
+
+						$validity = 'valid';
+						$model->updateScanOnDepart($ticketID);
+						$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+					}	
+				}
+				else{
+					$validity = "Inactive";
+					// notify user of inactive stamp
+					if(!$model->hasTicketBeenScannedBefore($ticketID))
+						$hello = '';
+						//$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+				}
 	   		}
 	   		else if($ticketType == 'CPARK'){
-	   			$validity = "";//checkCPark($ticketType,$ticketID,$callDBQuery,$updateTIDValidity);
+	   			if($model->isCPARKActive($ticketID)){
+		   			if($model->hasCPTicketBeenScanned($ticketID)){
+						$callDBQuery = null;
+						if(! $model->hasCParkExpiryTimeBeenReached($ticketID)){
+							return true;
+						}
+						else{
+							$updateTIDValidity=$ticketID;
+							return false;
+						}
+					}
+					else
+					{ 
+						if($model->hasValidPaymentBeenMade)
+							if(! $model->hasCParkExpiryTimeBeenReached($ticketID))
+								return true;
+						return false;
+					}
+		   	
+					$callDBQuery = '';
+					$validity = 'Not Relevant';
+				}
 	   		}
+	   		/*
 	   		else if($ticketType == 'EVENT'){
-	   			$validity = "";//checkEvent($ticketType,$ticketID,$eventID,$callDBQuery,$updateTIDValidity);
+	   			$validity;//checkEvent($ticketType,$ticketID,$eventID,$callDBQuery,$updateTIDValidity);
+   				if( ! $model->hasTicketBeenScanned($ticketType,$ticketID)){
+					$callDBQuery = 'insert';
+					if($model->eventIDmatchesEvent($eventID))
+						if($model->eventIsActive)
+							if($model->eventIsToday)
+								return true;
+				}
+				else{
+					$callDBQuery = 'update';
+					$updateTIDValidity = $ticketID;
+					return false;
+				}
 	   		}
 	   		else
-	   			die('Invalid parameter passed for Ticket Type');
+	   			$validity = 'Not Relevant';
+	   			*/
 	   	}
 	   		   			
 
@@ -67,7 +130,8 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
         $sqlUpd = "UPDATE scanned_data SET validity='false' WHERE ticketID = '".$updateTIDValidity."'";
 
        	if($callDBQuery == 'insert')
-       		mysqli_query($db_link, $sql);
+       		//mysqli_query($db_link, $sql);
+       		$hello = '';
        	else if($callDBQuery == 'update')
        		mysqli_query($db_link,$sqlUpd);  
       

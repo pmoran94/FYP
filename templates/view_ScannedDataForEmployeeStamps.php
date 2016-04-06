@@ -11,7 +11,7 @@ echo "<tr>
 <th>Ticket ID:   </th>
 <th>PO Number:   </th>
 <th>Validity:   </th>
-<th></th>
+<th colspan='3'>Action:</th>
 </tr>";
 
 echo "</thead>";
@@ -21,8 +21,12 @@ foreach ($this->model->getScannedDataForEmployee as $row){
 	echo "<td>" . $row ['ticketID'] . "</td>";
 	echo "<td>" . $row ['ponumber'] . "</td>";
 	echo "<td>" . $row ['validity'] . "</td>";
-	echo "<td><a href='?eUserValue=viewEvent&evId=".$row['ticketID']."'><button class='btn' type='button'><span class='glyphicon glyphicon-remove'></span></a></td>";
-	echo "<td><a href='?eUserValue=viewEvent&evId=".$row['ticketID']."'><button class='btn' type='button'><span class='glyphicon glyphicon-envelope'></span></a></td>";
+	echo "<form method='post' action='index.php'>";
+	echo "<input type='hidden' name='ticketID' value='".$row['ticketID']."'>";
+	echo "<td><button class='btn btn-warning' type='button' name='action' value=''><span class='glyphicon glyphicon-remove'></span></button>";
+	echo "&nbsp&nbsp&nbsp<button class='btn btn-default' type='button' name='action' value=''><span class='glyphicon glyphicon-envelope'></span></button>";
+	echo "&nbsp&nbsp&nbsp<button class='btn btn-success' type='button' name='action' value=''><span class='glyphicon glyphicon-envelope'></span></button></td>";
+	echo "</form>";
 	echo "</tr>";
 }
 //<a><span class='glyphicon glyphicon'></span></a></td><td><a><span class='glyphicon glyphicon-remove'></span></a>

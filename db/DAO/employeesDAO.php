@@ -125,7 +125,7 @@ class employeesDAO extends BaseDAO {
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored		
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 			
-		if (!empty($result[0]["emp_no"])) return ($result[0]["emp_no"]);
+		if ($result != null) return ($result[0]["emp_no"]);
 		else return (false);
 	}
 
