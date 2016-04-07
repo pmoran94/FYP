@@ -19,9 +19,11 @@
 								<span class="icon-bar"></span>
 							</button>
 						</div>
+						<div>
 						<div style='width:100%:height:15%'>
 							<h2 style='font-family:"Lucida Console", Monaco, monospace'><img src='./images/head.jpg' style='height:90px;width:90px;padding-bottom: 5px'>
 							Qr Coding System</h2>
+						</div>
 						</div>
 						<div class="collapse navbar-collapse" id="navBar1">
 
@@ -64,7 +66,7 @@
 		<ul class="sidebar-nav">
 			<li class="btn-block "><a href="?button=topUpParkingTicket"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTop Up Car Ticket</a></li>
 			<li class="btn-block "><a href="?userValue=allEventsForUser"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspView My Events</a></li>
-			<li class="btn-block "><a href="achievementsFull.html"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTrack Sent Stamps</a></li>
+			<li class="btn-block "><a href="?userValue=viewTrackedStamps"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTrack Sent Stamps</a></li>
 			<li class="btn-block "><a href="skillsFull.html"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspNotifications</a></li>
 		</ul>
 	</div>
@@ -132,6 +134,8 @@
 								include_once 'view_all_events_for_user.php';
 							else if($userView=='viewEvent')
 								include_once 'viewEventDetails.php';
+							else if($userView == 'viewTrackedStamps')
+								include_once 'view_trackStamps.php';
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
 						echo $leftBox ;

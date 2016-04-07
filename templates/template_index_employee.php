@@ -58,7 +58,9 @@
 		<ul class="sidebar-nav">
 			<li class="btn-block"><a href="?eUserValue=viewCustomerIssues">View Issues</a></li>
 			<li class="btn-block"><a href="?empButton=liSearchCustomers">Search Customers</a></li>
-			<li class="btn-block"><a href='?empButton=lireportIssue'>Report Issue</a></li>
+			<?php $service = $this->model->getEmployeeService();
+			if($service == 'EVENT' || $service == '')
+				echo "<li class='btn-block'><a href='?empButton=liSetEventID'>Load Event Session</a></li>";?>
 		</ul>
 	</div>
 	

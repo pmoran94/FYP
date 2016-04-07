@@ -22,7 +22,7 @@ foreach ($this->model->allCustomerIssues as $row){
 	echo "<td>" . $row ['subject'] . "</td>";
 	echo "<td>" . $row ['content'] . "</td>";
 	echo "<td>" . $row ['date_'] . "</td>";
-	echo "<td><a><span class='glyphicon glyphicon-menu-alt'></span></a></td><td><a><span class='glyphicon glyphicon-remove'></span></a></td>";
+	echo "<td><button type='submit' class='btn btn-default' title='Contact User By Online Notification' name='contactByNofication'><span class='glyphicon glyphicon-envelope'></span></button>&nbsp&nbsp&nbsp<button type='submit' class='btn btn-danger' title='Remove Issue' name='action' value='deleteCustIssue'><span class='glyphicon glyphicon-remove'></span></button></td>";
 	echo "</tr>";
 }
 echo "</table>";

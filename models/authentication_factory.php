@@ -107,6 +107,9 @@ class authentication_factory {
 		
 		return($_SESSION ['isUserEmploy']);
 	}
+	public function setEventID($eventID){
+		$_SESSION['eventID'] = $eventID ;
+	}
 
 
 
@@ -156,6 +159,7 @@ class authentication_factory {
 		unset ( $_SESSION ['user_id'] );
 		unset ( $_SESSION ['username'] );
 		unset ($_SESSION ['isUserEmploy']);
+		unset ($_SESSION ['eventID']);
 		// Destroy the current session
 		session_destroy ();
 	}

@@ -38,7 +38,28 @@ class qrticketsDAO extends BaseDAO {
 
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 		return $result;
+	}
 
+	public function getAllQRs(){
+		$sqlQuery = "SELECT qrCodeID,qrcodes.type,stamps.active ";
+		$sqlQuery .= "FROM qrcodes ";
+		$sqlQuery .= "JOIN stamps ON (qrcodes.qrCodeID=stamps.stampID) ";
+		$sqlQuery .= "UNION SELECT qrCodeID,qrcodes.type,parkingtickets.active FROM qrcodes ";
+		$sqlQuery .= "JOIN parkingtickets ON (qrcodes.qrCodeID=parkingtickets.ticketID) ";
+		$sqlQuery .= "UNION SELECT qrCodeID,qrcodes.type,invites.eventID FROM qrcodes ";
+		$sqlQuery .= "JOIN invites ON (qrcodes.qrCodeID=invites.inviteID) ";
+
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+		return $result;
+	}
+
+	public function getStampsForCustomer($po){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM stamps ";
+		$sqlQuery .= "WHERE generatedBy='$po' ";
+		$result=$this->getDbManager()->executeSelectQuery($sqlQuery);
+		if($result!=null)return $result;
+		else return false;
 	}
 
 	public function deactivateStampInStampsTable($ticketID){
@@ -88,6 +109,12 @@ class qrticketsDAO extends BaseDAO {
 
 		if($result != null) return $result[0]['active'];
 		else return false;
+	}
+	public function updateTIDValidityPrescanned($ticketID){
+		$sqlQuery = "UPDATE scanned_data ";
+		$sqlQuery .= "SET validity='Pre-Scanned Ticket' ";
+		$sqlQuery .= "WHERE ticketID='$ticketID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}
 
 	public function updateScannedDataInPTTable($ticketID,$empNo){
@@ -165,6 +192,13 @@ class qrticketsDAO extends BaseDAO {
 	public function updateScanOnDepart($ticketID,$empNo){
 		$sqlQuery = "UPDATE stamps ";
 		$sqlQuery .= "SET scannedOnDep='yes',empNumberOfFirstScan='$empNo' ";
+		$sqlQuery .= "WHERE stampID='$ticketID' ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+
+	public function updateScanOnArr($ticketID){
+		$sqlQuery = "UPDATE stamps ";
+		$sqlQuery .= "SET scannedOnArr='yes' ";
 		$sqlQuery .= "WHERE stampID='$ticketID' ";
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}
@@ -305,6 +339,13 @@ class qrticketsDAO extends BaseDAO {
 		return $result;
 	}
 
+	public function updateEventActivity($eventID){
+		$sqlQuery = "UPDATE events ";
+		$sqlQuery .= "SET active='yes' ";
+		$sqlQuery .= "WHERE eventID='$eventID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+
 	public function getAllEvents(){
 		$sqlQuery = "SELECT * ";
 		$sqlQuery .= "FROM events ";
@@ -435,15 +476,6 @@ class qrticketsDAO extends BaseDAO {
 		return false;
 	}
 
-	public function getAllQRCodes(){
-	
-		$sqlQuery = "SELECT * ";
-		$sqlQuery .= "FROM orders ";
-		
-		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
-		
-		return $result; 
-	}
 
 	public function insertIntoQRTable($qrType,$stampID){
 		$sqlQuery = "INSERT into qrcodes(type,qrCodeID) ";

@@ -31,6 +31,12 @@
 				case "stripePayment":
 					$this->stripePayment($parameters);
 					break;
+				case "setEventID":
+					$this->setEventID($parameters);
+					break;
+				case "contactCustomerByNotification":
+					$this->contactCustomerByNotification($parameters);
+					break;
 				case "deleteEvent":
 					$this->deleteEvent($parameters);
 					break;
@@ -115,7 +121,6 @@
 			$this->updateHeader ();
 			$this->model->getAllCustomers();
 			$this->model->getAllCustomerIssues();
-			$this->model->getAllEmployeeIssues();
 			$this->model->getAllEmployees();
 			$this->model->getUserDetails();
 			$this->model->getEmployeeDetails();
@@ -125,7 +130,9 @@
 			$this->model->getAllParkingTickets();
 			$this->model->getAllEventsForUser();
 			$this->model->getAllDetailsForEvent($e__ID);
-			$this->model->getScannedDataForEmployee(); 
+			$this->model->getScannedDataForEmployee();
+			$this->model->getStampsForCustomer(); 
+			$this->model->getAllQRs();
 			
 		}
 
@@ -169,6 +176,12 @@
 				$this->model->updateParkingPrice($price);
 		}
 
+		function setEventID($parameters){
+			$eventID = $parameters['fEventID'];
+			$this->model->setEventID($eventID);
+			$this->model->updateEventActivity($eventID);
+		}
+
 		function reportIssue($parameters){
 			$subject = $parameters['issueSubject']; 
 			$content = $parameters['issueContent'];
@@ -180,6 +193,15 @@
 			$this->model->reportIssue($subject,$content,$userId,$userPO,$date,$username);
 		}
 
+		function contactCustomerByNotification($parameters){
+			$ponumber = $parameters['ponumber'];
+			$subject = $parameters['contactSubject'];
+			$content = $parameters['contactContent'];
+			//if(isset($_GET['ponumber']))$ponumber = $_GET['ponumber'];
+			//else $ponumber = '';
+
+			$this->model->contactCustomerByNotification($ponumber,$subject,$content);
+		}
 
 		function updateUserForm(){
 			$userId = $this->model->authenticationFactory->getIDLoggedIn();
@@ -251,7 +273,7 @@
 
 		function createEvent($parameters){
 			$eventCreator= $this->model->authenticationFactory->getPONumberLoggedIn();
-
+			$ponumber = $eventCreator;
 			$eventName= $parameters["nameOfEvent"];
 			$eventDesc= $parameters["descOfEvent"];
 			$eventDate= $parameters["dateOfEvent"];
@@ -260,6 +282,7 @@
 			$eventID=$this->model->validationFactory->eventIDGenerator();
 			$dateOfCreation = date('Y/m/d H:i:s');
 			$ticketID = "";
+
 
 
 			$message = "You are invited to my event!";
@@ -277,8 +300,9 @@
 					foreach($inviteNames as $index=>$name){
 						$ticketID = $this->model->validationFactory->inviteIDGenerator($eventID);
 						$this->model->sendInvites($name,$inviteEmail[$index],$eventID,$ticketID);
-						include_once './callQRGenerator.php';
-						include_once './mailgun-php-1.7.1/mailgun-php/sendEmail.php';
+						include_once './phpqrcode/callQRGenerator.php';
+						sleep(5);
+					//	include_once './mailgun-php-1.7.1/mailgun-php/sendEmail.php';
 					}
 
 		}
@@ -309,7 +333,7 @@
 					$this->model->deactivateExistingParkingTicket($ponumber);
 				if($this->model->insertIntoQRTable($qrType,$ticketID))
 					if($this->model->createParkingTicket($ponumber,$dateOfCreation,$ticketID,$initialExpiryTime))
-						include_once'./callQRGenerator.php';
+						include_once'./phpqrcode/callQRGenerator.php';
 						//Deduct Appropriate Amount
 					
 		}
@@ -392,7 +416,7 @@
 			if($hashedPassword == $dbpassword)
 				if($this->model->insertIntoQRTable($qrType,$ticketID))
 					if($this->model->createStamp($destination,$weight,$type,$ticketID,$ponumber))
-						include_once './callQRGenerator.php';
+						include_once './phpqrcode/callQRGenerator.php';
 
 							
 		}

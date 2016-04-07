@@ -43,18 +43,17 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
    	    $ticketID = $db_link->real_escape_string(substr($name,12,7));
  	    $ponumber = $db_link->real_escape_string(substr($name,5,7));
 
-		if(strlen($name==26)) $eventID = $db_link->real_escape_string(substr($name,19,7));
+		if(strlen($name==27)) $eventID = $db_link->real_escape_string(substr($name,19,8));
 	   	else $eventID = null;
 
 	   	if(strlen($name==23)) $regNumbers = $db_link->real_escape_string(substr($name,19,4));
 	   	else $regNumbers = null;
 
+	   	$activeEventID = $model->getEventID();
 
 
 	   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
-	   	$service = $model->getEmployeeService($ticketType);
-
-	   	$updateTIDValidity='';
+	   	$service = $model->getEmployeeService();
 
 	   	if($service == $ticketType || $service == ""){
 	   		if($ticketType == 'STAMP'){
@@ -63,6 +62,7 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 						if($model->didSecondEmployeeScan($ticketID)){
 							$model->deactivateStampInStampsTable($ticketID);
 							$model->updateTIDValidityApprove($ticketID);
+							$model->updateScanOnArr($ticketID);
 						}
 						else{
 							$model->updateTIDValidityCheckDestination($ticketID);
@@ -135,34 +135,31 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 						$model->updateTIDValidityInactive($ticketID); //Provide Registration Details
 						//Notify User of Inactive Ticket, If Registration Matches then issue Fine
 	   		}
-	   		else
-	   			$validity = "Not Relevant";
-
-
-
-
-
-	   		/*
 	   		else if($ticketType == 'EVENT'){
-	   			$validity;//checkEvent($ticketType,$ticketID,$eventID,$callDBQuery,$updateTIDValidity);
-   				if( ! $model->hasTicketBeenScanned($ticketType,$ticketID)){
-					$callDBQuery = 'insert';
-					if($model->eventIDmatchesEvent($eventID))
-						if($model->eventIsActive)
-							if($model->eventIsToday)
-								return true;
+	   			if($activeEventID == $eventID){
+	   				if( ! $model->hasInviteAlreadyBeenScanned($ticketID)){
+	   					$validity = "Valid";
+	   					$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+	   					$model->updateAttendedStatus($ticketID);
+	   					$model->incrementAttendeesField($eventID);
+	   				}
+	   				else
+	   					$validity = "Pre-scanned Ticket";
 				}
 				else{
-					$callDBQuery = 'update';
-					$updateTIDValidity = $ticketID;
-					return false;
+					$validaty = "Invalid";
 				}
 	   		}
 	   		else
-	   			$validity = 'Not Relevant';
-	   			*/
+	   			$ticketType="Invalid";
+	   			$ponumber="Invalid";
+	   			$ticketID="Invalid";
+	   			$eventID="Invalid";
+	   			$validity="Invalid";
+	   			
+	   			
 	   	}
-      
+      	
 
         $html.= '<td>'.$ticketType.'</td>';  
         $html .= '<td>'.$ponumber.'</td>';  
@@ -170,6 +167,7 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
         $html .= '<td>'.$eventID.'</td>';
         $html .= '<td>'.$validity.'</td>';
         $html .= "</tr>";  
+
  	}  
 
 
@@ -191,6 +189,8 @@ function checkEvent($ticketType,$ticketID,$eventID,&$callDBQuery,&$updateTIDVali
 
 }  
 $html .= '</table>';  
+if($service == 'EVENT' && $activeEventID == false)
+	$html .= "<h4 style=color:red>Note : Event ID not Set</h4>";
 echo $html;  
 echo "<br /><a href='?eUserValue=viewScannedData'><button class='btn btn-warning'>View Scanned Data</button>";
 

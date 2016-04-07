@@ -25,14 +25,7 @@ class notificationsDAO extends BaseDAO{
 		
 		return $result; 
 	}
-	public function deleteRecord($mID){
-		$sqlQuery = "DELETE FROM notifcations ";
-		$sqlQuery .= "WHERE id = '$mID' ";		
-		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
-		$result = $this->getDbManager()->executeQuery($sqlQuery);
-	
-	}
-	
+
 	
 	public function reportIssue($subject,$content,$userId,$userPO,$date,$username){
 	
@@ -42,6 +35,12 @@ class notificationsDAO extends BaseDAO{
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 		return $result;
 	}	
+	public function contactCustomerByNotification($ponumber,$subject,$content,$employee){
+		$sqlQuery = "INSERT into notificationmessages(ponumber,subject,content,employee) ";
+		$sqlQuery .= "VALUES('$ponumber','$subject','$content','$employee') ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+		return $result;
+	}
 
 }
 ?>

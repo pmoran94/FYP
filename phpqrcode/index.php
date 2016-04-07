@@ -31,32 +31,32 @@ $eventID = $_GET['eventID'];
 $qrPurpose = $_GET['genButton'];
 
 if($qrPurpose == 'cpark'){
-    $ticket = genCparkData($currentUserId,$timestamp,$ticketID);
+    $ticket = genCparkData($currentUserId,$ticketID);
 }
 else if($qrPurpose == 'event'){
-    $ticket = genStampData($currentUserId,$timestamp,$ticketID,$eventID);
+    $ticket = genEventData($currentUserId,$ticketID,$eventID);
 }
 else if($qrPurpose == 'stamp'){
-    $ticket = genStampData($currentUserId,$timestamp,$ticketID);
+    $ticket = genStampData($currentUserId,$ticketID);
 }
 else{
     $ticket = "";
 }
 
-function genStampData($currentUserId,$timestamp,$ticketID){
+function genStampData($currentUserId,$ticketID){
     $ticketType = "STAMP";
 
     return $ticketType . $currentUserId . $ticketID . '\n';
 }
-function genCparkData($currentUserId,$timestamp,$ticketID){
+function genCparkData($currentUserId,$ticketID){
     $ticketType = "CPARK";
 
     return $ticketType . $currentUserId . $ticketID . '\n';
 }
-function genEventData($currentUserId,$timestamp,$ticketID, $eventID){
+function genEventData($currentUserId,$ticketID, $eventID){
     $ticketType = "EVENT";
 
-    return $ticketType . $currentUserId . $eventID . $ticketID . '\n' ;
+    return $ticketType . $currentUserId . $ticketID . $eventID . '\n' ;
 }
 
 

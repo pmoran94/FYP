@@ -57,7 +57,6 @@
 		<h3 class="text-center" ><?php echo $appName;?> </h3>
 		<ul class="sidebar-nav">
 			<li class="btn-block"><a href="?aUserValue=viewCustIssues">View Customer Issues</a></li>
-			<li class="btn-block"><a href="?aUserValue=viewEmpIssues">View Employee Issues</a></li>
 			<li class="btn-block"><a href="?aUserValue=viewAllCust">View all Customers</a></li>
 			<li class="btn-block"><a href="?aUserValue=viewAllEmp">View all Employees</a></li>
 			<li class="btn-block"><a href="?aUserValue=viewAllAdmins">View Admins</a></li>
@@ -94,9 +93,6 @@
 								else if($userDropMenu == 'viewCustIssues'){
 									include_once 'viewCustomer_issues.php';
 								}
-								else if($userDropMenu == 'viewEmpIssues'){
-									include_once 'viewEmployee_issues.php';
-								}
 								else if($userDropMenu =='viewAllCust'){
 									include_once 'view_customers.php';
 								}
@@ -107,7 +103,7 @@
 									include_once '';
 								}
 								else if ($userDropMenu =='viewAllQRs'){
-									include_once '';
+									include_once 'view_AllQRs.php';
 								}
 								else if($userDropMenu =='viewAllEvents'){
 									include_once 'view_events.php';

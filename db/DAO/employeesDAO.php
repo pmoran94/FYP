@@ -35,10 +35,10 @@ class employeesDAO extends BaseDAO {
 
 	}
 
-	public function getEmployeeService($uid,$service){
+	public function getEmployeeService($uid){
 		$sqlQuery = "SELECT service ";
 		$sqlQuery .= "FROM employees ";
-		$sqlQuery .= "WHERE service='$service' ";
+		$sqlQuery .= "WHERE e_id='$uid' ";
 
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 		if ($result != NULL) return $result[0]["service"];

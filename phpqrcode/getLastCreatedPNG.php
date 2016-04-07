@@ -12,7 +12,7 @@ $ticketToDisplay;
 
 $path = 'temp/'; 
 foreach (new DirectoryIterator($path) as $file) {
-    if(strpos($file->getFilename(),$ticketID) !== false) 
+    if(strpos($file->getFilename(),'2823455') !== false) 
     	echo $file->getFilename() . '<br>';
     	$ticketToDisplay = $file->getFilename();
     	

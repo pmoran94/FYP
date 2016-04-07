@@ -36,7 +36,6 @@ class View {
 		$loggedInUserActions = file_get_contents('./templates/loggedInUserActions.php');
 		$issueReport = file_get_contents('./templates/reportIssue.php');
 		$employee_issueReport = file_get_contents('./templates/employee_reportIssue_form.php');
-		$makeOrder = file_get_contents('./templates/makeOrder.php');
 		$loggedInAdminActions = file_get_contents('./templates/loggedInAdminActions.php');
 		$deleteEmployee = file_get_contents('./templates/delete_employee.php');
 		$deleteCustomer = file_get_contents('./templates/deleteUser.php');
@@ -48,8 +47,10 @@ class View {
 		$emailsForm = file_get_contents('./templates/inviteEmails_form.php');
 		$stampForm = file_get_contents('./templates/postalStampForm.php');
 		$parkingForm = file_get_contents('./templates/parkingTicketForm.php');
-		$download = file_get_contents('./download_header.php');
+		$download = file_get_contents('./phpqrcode/download_header.php');
 		$changeCPPrice = file_get_contents('./templates/updateParkingPrice_form.php');
+		$contactByNotification = file_get_contents('./templates/contactCustomerByNotification.php');
+		$setEventIDForm = file_get_contents('./templates/setEventID_form.php');
 
 
 		$authenticationErrorMessage = "";
@@ -113,11 +114,12 @@ class View {
 						if (! empty($_GET['empButton'])) $empLink = $_GET['empButton'];
 						else $empLink = "";
 
-						if($empLink == 'liopenScanner'){
 
-							// either open scanner on view
-							// or display
-
+						if($empLink=='contactByNotification'){
+							$empLeftBox = $contactByNotification;
+						}
+						else if($empLink == 'liSetEventID'){
+							$empLeftBox = $setEventIDForm;
 						}
 						else if($empLink == 'lireportIssue'){
 							$empLeftBox = $employee_issueReport;
@@ -127,7 +129,6 @@ class View {
 						}
 						else if($empLink == 'liSearchCustomers'){
 							$empLeftBox = $searchCusForm;
-
 						}
 						
 				}
@@ -177,23 +178,6 @@ class View {
 						
 						$leftBox = $download; 
 					}
-
-
-
-					/*
-				if(! $var == null){
-					if($this->model->isUserLoggedInAdmin()){
-						$introTop = $username . " : " . $empnumber;
-						include_once'./templates/template_index_admin.php';
-					}
-					else
-						$introTop = $username . " : " . $empnumber;
-						include_once'./templates/template_index_employee.php';
-				}
-				else{
-					$introTop = $username . " : " . $ponumber;
-					include_once'./templates/template_index.php';
-				}*/
 				
 				if($var !=null && $this->model->isUserLoggedInAdmin()){
 					$introTop = $username . " : " . $empnumber;

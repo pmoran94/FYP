@@ -15,7 +15,7 @@ include_once 'authentication_factory.php';
 class Model {
 	public $DAO_Factory, $validationFactory, $authenticationFactory,$dataHandler; // factories
 	private $qrticketsDAO,$customersDAO,$employeesDAO,$notificationsDAO; // DAOs
-	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployeeIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$eventDetails="",$searchResults="",$allCompanyNames="",$getScannedDataForEmployee=""; // strings
+	public $appName = "", $introMessage = "", $loginStatusString = "",$userDetails = "",$employeeDetails="", $rightBox = "",$displayTables = "", $signUpConfirmation="",$middleBox = "", $allCustomers="",$allCustomerIssues="",$allEmployees="",$allStamps="",$allCParkTickets="",$allEvents="",$allInviteesForEvent="",$allEventsForUser="",$eventDetails="",$searchResults="",$allCompanyNames="",$getScannedDataForEmployee="",$trackStampsForCustomer = "",$getAllQRs=""; // strings
 	public $newUserErrorMessage = "", $authenticationErrorMessage = "";	//error messages
 	public $hasAuthenticationFailed = false, $hasRegistrationFailed=null;	//control variables
 	
@@ -168,9 +168,6 @@ class Model {
 	public function getAllCustomerIssues(){
 		$this->allCustomerIssues = $this->notificationsDAO->getAllCustomerIssues();
 	}
-	public function getAllEmployeeIssues(){
-		$this->allEmployeeIssues = $this->notificationsDAO->getAllEmployeeIssues();
-	}
 	public function getAllEmployees(){
 		$this->allEmployees = $this->employeesDAO->getAllEmployees();
 	}
@@ -182,7 +179,7 @@ class Model {
 	public function createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation){
 		return ($this->qrticketsDAO->insertNewEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation));
 	}
-	public function sendInvites($name,$email,$eventID){
+	public function sendInvites($name,$email,$eventID,$inviteID){
 		return ($this->qrticketsDAO->insertIntoInvitesTable($name,$email,$eventID,$inviteID));
 	}
 
@@ -219,12 +216,12 @@ class Model {
 		return ($this->qrticketsDAO->insertIntoQRTable($qrType,$stampID));
 	}
 
-	public function getEmployeeService($service){
+	public function getEmployeeService(){
 		
 		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
 		else $uid = "";
 
-		return($this->employeesDAO->getEmployeeService($uid,$service));
+		return($this->employeesDAO->getEmployeeService($uid));
 	}
 	
 	public function getScannedDataForEmployee(){
@@ -241,8 +238,22 @@ class Model {
 		return($this->qrticketsDAO->hasValidPaymentBeenMade($ticketID));
 	}
 
+	public function getStampsForCustomer(){
+		if(! empty($_SESSION['user_id'])) $uid = $_SESSION['user_id'];
+		else $uid ='';
+		$po = $this->customersDAO->getPONumberLoggedIn($uid);
+		$this->trackStampsForCustomer = $this->qrticketsDAO->getStampsForCustomer($po);
+	}
 
+	public function getAllQRs(){
+		$this->getAllQRs = $this->qrticketsDAO->getAllQRs();
+	}
 
+	public function contactCustomerByNotification($ponumber,$subject,$content){
+		$uid = $_SESSION['user_id'];
+		$employee = $this->employeesDAO->getEmpNumberLoggedIn($uid);
+		$res = $this->notificationsDAO->contactCustomerByNotification($ponumber,$subject,$content,$employee);
+	}
 
 	/*
 	
@@ -283,6 +294,9 @@ class Model {
 		$uid = $_SESSION['user_id'];
 		$empNo = $this->employeesDAO->getEmpNumberLoggedIn($uid);
 		$this->qrticketsDAO->updateScanOnDepart($ticketID,$empNo);
+	}
+	public function updateScanOnArr($ticketID){
+		$this->qrticketsDAO->updateScanOnDepart($ticketID);
 	}
 
 
@@ -328,7 +342,26 @@ class Model {
 
 
 
+	/*
+	
+		Methods For Setting and Scanning Event / Invites.
+		
+	*/
 
+	public function updateEventActivity($eventID){
+		$this->qrticketsDAO->updateEventActivity($eventID);
+	}
+	public function setEventID($eventID){
+		$this->authenticationFactory->setEventID($eventID);
+	}
+	public function getEventID(){
+		if(isset($_SESSION['eventID']))	return($_SESSION['eventID']);
+		else return false;
+	}
+	public function updateTIDValidityPrescanned($ticketID){
+		$this->qrticketsDAO->updateTIDValidityPrescanned($ticketID);
+
+	}
 
 
 
