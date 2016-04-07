@@ -1,34 +1,36 @@
 <?php
 /*
 
-	@Author : Paul Moran
+*	@author : Paul Moran
 
-	@Date :  25/02/2016
+*	@Date :  25/02/2016
 
-	Script to read data from Excel file. 
+	**Scanned Data Controller**
+
+*	Script to read data from Excel file. 
 	This data is broken up and validated using multiple checks from within the newly instantiated model.
-
+*
 	The overall result is pushed to the database along with a ticket to say whether or not the data scanned is valid or invalid.
-
+*
 	This file also ensures that not any employee scan any QR code.
-
+*
 
 */
 if(empty($_SESSION['user_id'])) die('Must be Logged in to see this page');
 
-include_once 'models/Model.php';
+include_once './models/Model.php';
 
 $model = new model();
 
 
 //include_once 'db/simple_db_manager.php';
 $db_link = mysqli_connect('localhost','root','','FYP');
-include_once 'PHPExcel/Classes/PHPExcel/IOFactory.php';  
+include_once './PHPExcel/Classes/PHPExcel/IOFactory.php';  
 $html=" <h2>Affected Data</h2><br>
 		<table border='1'>";  
 $validity = "";
 $callDBQuery="";
-$objPHPExcel = PHPExcel_IOFactory::load('scannedDataExcel.xlsx');  
+$objPHPExcel = PHPExcel_IOFactory::load('./scannedDataExcel.xlsx');  
 foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)   
 {  
     $highestRow = $worksheet->getHighestRow();  
@@ -41,8 +43,13 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
    	    $ticketID = $db_link->real_escape_string(substr($name,12,7));
  	    $ponumber = $db_link->real_escape_string(substr($name,5,7));
 
-		if(strlen($name>18)) $eventID = $db_link->real_escape_string(substr($name,19,7));
+		if(strlen($name==26)) $eventID = $db_link->real_escape_string(substr($name,19,7));
 	   	else $eventID = null;
+
+	   	if(strlen($name==23)) $regNumbers = $db_link->real_escape_string(substr($name,19,4));
+	   	else $regNumbers = null;
+
+
 
 	   	//CHECK IF THE EMPLOYEE HAS THE PRIVILEGE TO SCAN THIS QR CODE 
 	   	$service = $model->getEmployeeService($ticketType);
@@ -82,27 +89,59 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 	   		else if($ticketType == 'CPARK'){
 	   			if($model->isCPARKActive($ticketID)){
 		   			if($model->hasCPTicketBeenScanned($ticketID)){
-						$callDBQuery = null;
-						if(! $model->hasCParkExpiryTimeBeenReached($ticketID)){
-							return true;
-						}
-						else{
-							$updateTIDValidity=$ticketID;
-							return false;
+		   				if($model->hasFineBeenIssued($ticketID)){
+		   					$validity = "Fine Already Issued";
+		   					$model->deactivateCParkTicketInPTTable($ticketID);
+		   				}
+		   				else{
+							if(/*$model->hasCParkExpiryTimeBeenReached($ticketID*/!$model->hasCParkPaymentBeenMade($ticketID)){
+								$validity = 'Expired';
+								$model->updateTIDValidityExpired($ticketID);
+								$model->deactivateCParkTicketInPTTable($ticketID);
+								//ISSUE FINE BY BUTTON PRESS
+								//Notify User
+							}
+							else{
+								$validity = "Valid";
+								$model->updateTIDValidityValid($ticketID);
+							}
 						}
 					}
 					else
 					{ 
-						if($model->hasValidPaymentBeenMade)
-							if(! $model->hasCParkExpiryTimeBeenReached($ticketID))
-								return true;
-						return false;
+						if($model->hasCParkPaymentBeenMade($ticketID)/* &&  !$model->hasCParkExpiryTimeBeenReached($ticketID)*/){
+							$validity = 'valid';
+							$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+							$model->updateScannedDataInPTTable($ticketID);
+						}
+						else{
+							$validity='Expired';
+							$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
+							$model->deactivateCParkTicketInPTTable($ticketID);
+							$model->updateScannedDataInPTTable($ticketID);
+							//ISSUE FINE BY BUTTON PRESS
+						}
 					}
-		   	
-					$callDBQuery = '';
-					$validity = 'Not Relevant';
 				}
+				else 
+					if(! $model->hasCPTicketBeenScanned($ticketID)){
+						$validity = 'Inactive';
+
+						//$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);//Provide Registration Details
+						//Notify User of Inactive Ticket, If Registration Matches then issue Fine and delete from scanned data
+					}
+					else
+						$validity = 'Inactive';
+						$model->updateTIDValidityInactive($ticketID); //Provide Registration Details
+						//Notify User of Inactive Ticket, If Registration Matches then issue Fine
 	   		}
+	   		else
+	   			$validity = "Not Relevant";
+
+
+
+
+
 	   		/*
 	   		else if($ticketType == 'EVENT'){
 	   			$validity;//checkEvent($ticketType,$ticketID,$eventID,$callDBQuery,$updateTIDValidity);
@@ -123,17 +162,6 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 	   			$validity = 'Not Relevant';
 	   			*/
 	   	}
-	   		   			
-
-        $sql = "INSERT INTO scanned_data(ticketType,ponumber,ticketID,eventID,validity) VALUES ('".$ticketType."', '".$ponumber."', '".$ticketID."','".$eventID."','".$validity."')"; 
-
-        $sqlUpd = "UPDATE scanned_data SET validity='false' WHERE ticketID = '".$updateTIDValidity."'";
-
-       	if($callDBQuery == 'insert')
-       		//mysqli_query($db_link, $sql);
-       		$hello = '';
-       	else if($callDBQuery == 'update')
-       		mysqli_query($db_link,$sqlUpd);  
       
 
         $html.= '<td>'.$ticketType.'</td>';  
@@ -144,52 +172,6 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
         $html .= "</tr>";  
  	}  
 
-function checkStamp($ticketType,$ticketID,&$callDBQuery,&$updateTIDValidity){
-	if($model->hasTicketBeenScanned($ticketType,$ticketID)){
-		$callDBQuery = null;
-		if($model->validLastScanTimeInterval($ticketID)){
-			return true;
-		}
-		else{
-			$callDBQuery = 'update';
-			$updateTIDValidity=$ticketID;
-			return false;
-		}
-	}
-	else{ 
-		$callDBQuery = 'insert';
-		if($model->isStampExpiryTimeValid($ticketID)){
-			return true;
-		}
-		else{
-			$updateTIDValidity = $ticketID;
-			return false;
-		}
-	}
-}
-
-
-function checkCPark($ticketType,$ticketID,&$callDBQuery,&$updateTIDValidity){
-	if($model->hasTicketBeenScanned($ticketType,$ticketID)){
-		$callDBQuery = null;
-		if(! $model->hasCParkExpiryTimeBeenReached($ticketID)){
-			return true;
-		}
-		else{
-			$callDBQuery='update'; 
-			$updateTIDValidity=$ticketID;
-			return false;
-		}
-	}
-	else
-	{ 
-		$callDBQuery = 'insert';
-		if($model->hasValidPaymentBeenMade)
-			if(! $model->hasCParkExpiryTimeBeenReached($ticketID))
-				return true;
-		return false;
-	}
-}
 
 
 function checkEvent($ticketType,$ticketID,$eventID,&$callDBQuery,&$updateTIDValidity){

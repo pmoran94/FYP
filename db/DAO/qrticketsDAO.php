@@ -61,6 +61,25 @@ class qrticketsDAO extends BaseDAO {
 		$sqlQuery .= "WHERE ticketID='$ticketID'";
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}
+	public function updateTIDValidityExpired($ticketID){
+		$sqlQuery = "UPDATE scanned_data ";
+		$sqlQuery .= "SET validity='Expired' ";
+		$sqlQuery .= "WHERE ticketID='$ticketID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+	public function updateTIDValidityValid($ticketID){
+		$sqlQuery = "UPDATE scanned_data ";
+		$sqlQuery .= "SET validity='valid' ";
+		$sqlQuery .= "WHERE ticketID='$ticketID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+	public function updateTIDValidityInactive($ticketID){
+		$sqlQuery = "UPDATE scanned_data ";
+		$sqlQuery .= "SET validity='Inactive' ";
+		$sqlQuery .= "WHERE ticketID='$ticketID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+
 	public function isStampActive($ticketID){
 		$sqlQuery = "SELECT active ";
 		$sqlQuery .= "FROM stamps ";
@@ -69,6 +88,13 @@ class qrticketsDAO extends BaseDAO {
 
 		if($result != null) return $result[0]['active'];
 		else return false;
+	}
+
+	public function updateScannedDataInPTTable($ticketID,$empNo){
+		$sqlQuery = "UPDATE parkingtickets ";
+		$sqlQuery .="SET firstScanEmpNumber='$empNo' ";
+		$sqlQuery .="WHERE ticketID='$ticketID'";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}
 
 	public function getQRExpiryTime($ticketID){
@@ -98,6 +124,41 @@ class qrticketsDAO extends BaseDAO {
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 
 		if($result[0]['scannedOnDep'] =='yes') return true;
+		else return false;
+	}
+	public function hasCPTicketBeenScanned($ticketID){
+
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result[0]['firstScanEmpNumber'] != null) return true;
+		else return false;
+	}
+	
+	public function hasCParkPaymentBeenMade($ticketID){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result[0]['has_paid'] =='yes') return true;
+		else return false;
+	}
+	public function deactivateCParkTicketInPTTable($ticketID){
+		$sqlQuery ="UPDATE parkingtickets ";
+		$sqlQuery .="SET active='no' ";
+		$sqlQuery .="WHERE ticketID='$ticketID' ";
+		$result = $this->getDbManager()->executeQuery($sqlQuery);
+	}
+	public function hasFineBeenIssued($ticketID){
+		$sqlQuery = "SELECT * ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result[0]['fineIssued'] == 'yes') return true;
 		else return false;
 	}
 
@@ -164,6 +225,16 @@ class qrticketsDAO extends BaseDAO {
 		//Calls the method from the DAOFactory and passes in the query to be  execute, and the result is stored
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 		return $result;
+	}
+
+	public function isCParkActive($ticketID){
+		$sqlQuery = "SELECT active ";
+		$sqlQuery .= "FROM parkingtickets ";
+		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
+
+		if($result != null) return $result[0]['active'];
+		else return false;
 	}
 
 	public function IsTicketActive($ticketID){
@@ -233,6 +304,7 @@ class qrticketsDAO extends BaseDAO {
 		
 		return $result;
 	}
+
 	public function getAllEvents(){
 		$sqlQuery = "SELECT * ";
 		$sqlQuery .= "FROM events ";

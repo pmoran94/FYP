@@ -90,7 +90,7 @@
 								else if($userDropMenu == 'scannedParkData')
 									include_once './readingParkingDataFile.php';
 								else if($userDropMenu == 'newScannedData')
-									include_once './readExcel.php';
+									include_once './controllers/scannedDataController.php';
 								else if($userDropMenu == 'viewScannedData')
 									include_once 'view_ScannedDataForEmployeeStamps.php';
 							else if(isset($_POST['viewCustSearch']))

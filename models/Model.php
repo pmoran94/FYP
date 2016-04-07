@@ -237,10 +237,6 @@ class Model {
 		return true;
 	}
 
-	public function hasCParkExpiryTimeBeenReached($ticketID){
-		return($this->validationFactory->hasCParkExpiryTimeBeenReached($ticketID));
-	}
-
 	public function hasValidPaymentBeenMade($ticketID){
 		return($this->qrticketsDAO->hasValidPaymentBeenMade($ticketID));
 	}
@@ -290,9 +286,45 @@ class Model {
 	}
 
 
+	/*
+	
+		Methods For When CPARK is scanned!
+	
+	*/
 
+	public function isCParkActive($ticketID){
+		return($this->validationFactory->isCParkActive($ticketID));
+	}
+	public function hasCPTicketBeenScanned($ticketID){
+		return($this->validationFactory->hasCPTicketBeenScanned($ticketID));
+	}
+	public function hasCParkPaymentBeenMade($ticketID){
+		return($this->qrticketsDAO->hasCParkPaymentBeenMade($ticketID));
+	}
+	/*public function hasCParkExpiryTimeBeenReached($ticketID){
+		return($this->validationFactory->hasCParkExpiryTimeBeenReached($ticketID));
+	}*/
+	public function hasFineBeenIssued($ticketID){
+		return($this->qrticketsDAO->hasFineBeenIssued($ticketID));
+	}
+	public function deactivateCParkTicketInPTTable($ticketID){
+		$this->qrticketsDAO->deactivateCParkTicketInPTTable($ticketID);
+	}
+	public function updateTIDValidityExpired($ticketID){
+		$this->qrticketsDAO->updateTIDValidityExpired($ticketID);
+	}
+	public function updateTIDValidityValid($ticketID){
+		$this->qrticketsDAO->updateTIDValidityValid($ticketID);
+	}
+	public function updateScannedDataInPTTable($ticketID){
+		$uid = $_SESSION['user_id'];
+		$empNo = $this->employeesDAO->getEmpNumberLoggedIn($uid);
+		$this->qrticketsDAO->updateScannedDataInPTTable($ticketID,$empNo);
+	}
 
-
+	public function updateTIDValidityInactive($ticketID){
+		$this->qrticketsDAO->updateTIDValidityInactive($ticketID);
+	}
 
 
 

@@ -36,11 +36,21 @@ class validation_factory {
 		if($active == 'no') return false;
 		else return true;
 	}
+	public function isCPARKActive($ticketID){
+		$active = $this->qrticketsDAO->isCPARKActive($ticketID);
+
+		if($active == 'no') return false;
+		else return true;
+	}
 
 	public function hasCParkExpiryTimeBeenReached($ticketID){
 		$currentTime = date('Y-m-d h:i:s');
 		if($this->qrticketsDAO->getQRExpiryTime($ticketID)>=$currentTime) return true;
 		return false;
+	}
+
+	public function hasCPTicketBeenScanned($ticketID){
+		return($this->qrticketsDAO->hasCPTicketBeenScanned($ticketID));
 	}
 
 	public function IsTicketActive($ticketID){
@@ -66,12 +76,6 @@ class validation_factory {
 		else return (true);
 	}
 
-	public function isPPSNValid($PPSN){
-		$regex = "/^(\d{7})([A-Z]{1,2})$/i";
-		if(!preg_match($regex,$PPSN)) return (false);
-		else return (true);
-
-	}
 
 	public function isPinLengthValid($pin,$max_len,$min_len){
 		//if(is_numeric($pin)){
@@ -168,7 +172,7 @@ class validation_factory {
 		
 		while($flag == 0){
 
-			$inviteID = rand(10000000,99999999);
+			$inviteID = rand(1000000,9999999);
 
 			if( $this->qrticketsDAO->isInviteIDValid($inviteID,$eventID)){
 				$flag = 0 ;
