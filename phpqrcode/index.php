@@ -24,6 +24,7 @@
  */
 
 
+if(empty($_SESSION['user_id'])) die('Must be Logged in to see this page');
 
 $currentUserId = $_GET['ponumber'];
 $ticketID = $_GET['ticketID'];

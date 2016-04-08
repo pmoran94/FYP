@@ -99,7 +99,6 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 								$model->updateTIDValidityExpired($ticketID);
 								$model->deactivateCParkTicketInPTTable($ticketID);
 								//ISSUE FINE BY BUTTON PRESS
-								//Notify User
 							}
 							else{
 								$validity = "Valid";
@@ -150,43 +149,23 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 					$validaty = "Invalid";
 				}
 	   		}
-	   		else
+	   		else{
 	   			$ticketType="Invalid";
 	   			$ponumber="Invalid";
 	   			$ticketID="Invalid";
 	   			$eventID="Invalid";
 	   			$validity="Invalid";
+	   		}
 	   			
 	   			
 	   	}
-      	
-
         $html.= '<td>'.$ticketType.'</td>';  
         $html .= '<td>'.$ponumber.'</td>';  
         $html .= '<td>'.$ticketID.'</td>';
         $html .= '<td>'.$eventID.'</td>';
         $html .= '<td>'.$validity.'</td>';
         $html .= "</tr>";  
-
  	}  
-
-
-
-function checkEvent($ticketType,$ticketID,$eventID,&$callDBQuery,&$updateTIDValidity){
-	if( ! $model->hasTicketBeenScanned($ticketType,$ticketID)){
-		$callDBQuery = 'insert';
-		if($model->eventIDmatchesEvent($eventID))
-			if($model->eventIsActive)
-				if($model->eventIsToday)
-					return true;
-	}
-	else{
-		$callDBQuery = 'update';
-		$updateTIDValidity = $ticketID;
-		return false;
-	}
-}
-
 }  
 $html .= '</table>';  
 if($service == 'EVENT' && $activeEventID == false)

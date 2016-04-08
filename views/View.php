@@ -51,6 +51,7 @@ class View {
 		$changeCPPrice = file_get_contents('./templates/updateParkingPrice_form.php');
 		$contactByNotification = file_get_contents('./templates/contactCustomerByNotification.php');
 		$setEventIDForm = file_get_contents('./templates/setEventID_form.php');
+		
 
 
 		$authenticationErrorMessage = "";

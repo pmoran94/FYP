@@ -5,6 +5,8 @@ The following script is executed to send a text message to a user when needed.
 The message parameter is left blank here due to the limitations applied to the test account registered for this project.
 */ 
 
+if(empty($_SESSION['user_id'])) die('Must be Logged in to see this page');
+
 $message = "";
 $username = "pmoran94";
 $password = "NOYJAdWTECgEQL";

@@ -68,6 +68,7 @@
 			<li class="btn-block "><a href="?userValue=allEventsForUser"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspView My Events</a></li>
 			<li class="btn-block "><a href="?userValue=viewTrackedStamps"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspTrack Sent Stamps</a></li>
 			<li class="btn-block "><a href="skillsFull.html"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspNotifications</a></li>
+			<li class="btn-block "><a href="?userValue=viewExpiryTime"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp&nbspView Current Expiry Time</a></li>
 		</ul>
 	</div>
 	
@@ -123,8 +124,6 @@
 						if (! empty($_GET['userValue'])) $userView = $_GET['userValue'];
 						else $userView = "";
 
-						
-
 						if( isset($userView))
 							if($userView=='viewDetails')
 								include_once 'usersDetails.php';
@@ -136,6 +135,8 @@
 								include_once 'viewEventDetails.php';
 							else if($userView == 'viewTrackedStamps')
 								include_once 'view_trackStamps.php';
+							else if($userView == 'viewExpiryTime')
+								include_once 'getCurrentCParkExpiry.php';
 						else if(isset($_POST['editUserDetailsP']))
 							include_once 'editUserDetails.php';
 						echo $leftBox ;

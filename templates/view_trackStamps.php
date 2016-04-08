@@ -19,7 +19,7 @@ foreach ($this->model->trackStampsForCustomer as $row){
 	echo "<td>" . $row ['destination'] . "</td>";
 	echo "<td>";
 	if($row['scannedOnDep'] == 'no'){
-		echo "Post Still in Local PO";	
+		echo "Yet to be Scanned";	
 	} 
 	else if($row['scannedOnDep'] == 'yes' && $row['scannedOnArr'] == 'no'){
 		echo "Post In Transit";

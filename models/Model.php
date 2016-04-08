@@ -215,6 +215,11 @@ class Model {
 	public function insertIntoQRTable($qrType,$stampID){
 		return ($this->qrticketsDAO->insertIntoQRTable($qrType,$stampID));
 	}
+	public function getCurrentCParkExpiryTime(){
+		$uid = $_SESSION['user_id'];
+		$ponumber = $this->customersDAO->getPONumberLoggedIn($uid);
+		return($this->qrticketsDAO->getCurrentCParkExpiryTime($ponumber));
+	}
 
 	public function getEmployeeService(){
 		
@@ -360,7 +365,15 @@ class Model {
 	}
 	public function updateTIDValidityPrescanned($ticketID){
 		$this->qrticketsDAO->updateTIDValidityPrescanned($ticketID);
-
+	}
+	public function hasInviteAlreadyBeenScanned($ticketID){
+		$this->qrticketsDAO->hasInviteAlreadyBeenScanned($ticketID);
+	}
+	public function updateAttendedStatus($ticketID){
+		$this->qrticketsDAO->updateAttendedStatus($ticketID);
+	}
+	public function incrementAttendeesField($eventID){
+		$this->qrticketsDAO->incrementAttendeesField($eventID);
 	}
 
 

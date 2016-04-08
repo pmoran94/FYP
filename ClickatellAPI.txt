@@ -1,4 +1,0 @@
-// Clickatell API Browser
-
-
-http://api.clickatell.com/http/sendmsg?user=pmoran94&password=NOYJAdWTECgEQL&api_id=3583573&to=353857170030&text=Message
