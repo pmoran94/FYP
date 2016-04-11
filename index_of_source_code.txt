@@ -1,0 +1,87 @@
+Further details regarding the content and purpose of each folder are outlined in the project report using tables and diagrams.
+
+The source code layout of this project is as follows.
+conf
+	->conf.inc.php
+controllers
+	->controller.php
+	->scannedDataController.php
+css
+	->bootstrap.css
+	->sid.css
+db
+	DAO
+		->dao.php
+		->customersDAO.php
+		->employeesDAO.php
+		->notificationsDAO.php
+		->qrticketsDAO.php
+	->DAO_factory.php
+	->simple_db_manager.php
+images
+mailgun-php-1.7.2
+	mailgun-php
+		/* ALL FILES WITHIN THE 'vendor' FOLDER WERE WRITTEN BY A THIRD PARTY*/
+		vendor
+		->sendEmail.php
+models
+	->authentication_factory.php
+	->model.php
+	->validation_factory.php
+/*The PHPExcel FOLDER WAS WRITTEN BY A THIRD PARTY*/
+PHPExcel
+phpqrcode
+	->callQRGenerator.php
+	->download_header.php
+	->getLastCreatedPNG.php
+	->index.php
+	temp
+		->/*ALL PNG IMAGES*/
+	/*THE REST OF THE FILES IN THE 'phpqrcode' FOLDER WERE WRITTEN BY A THIRD PARTY*/
+templates
+	->changePasswordForm.php
+	->changePinForm.php
+	->contactCustomerByNotification.php
+	->cus_login_form.php
+	->editEmployeeDetails.php
+	->editUserDetails.php
+	->employeeDetails.php
+	->getCurrentCParkExpiry.php
+	->html_doctype_and_head.php
+	->insert_new_user_form.php
+	->insertNewEmployee_form.php
+	->inviteEmails_form.php
+	->loginabar.php
+	->parkingTicketForm.php
+	->postalStampForm.php
+	->reportIssue.php
+	->search_form.php
+	->searchresults.php
+	->setEventID_form.php
+	->stripePayment_form.php
+	->template_index.php
+	->template_index_admin.php
+	->template_index_employee.php
+	->template_index_login.php
+	->topUpParkingTicket_form.php
+	->update_user_form.php
+	->updateParkingPrice_form.php
+	->usersDetails.php
+	->view_all_events_for_user.php
+	->view_AllQRs.php
+	->view_customers.php
+	->view_employees.php
+	->view_events.php
+	->view_notifications.php
+	->view_parkingtickets.php
+	->view_ScannedDataForEmployeeStamps.php
+	->view_stamps.php
+	->view_trackStamps.php
+	->viewCustomer_issues.php
+	->viewEventDetails.php
+views
+	->view
+composer.json
+scannedDataExcel.xlsx
+index.php
+sendSMS.php

@@ -169,6 +169,11 @@
 		
 		}
 
+		/*
+			
+			Method to update the parking ticket price, which is determined by the admin.
+
+		*/
 		function updateParkingPrice($parameters){
 			$price = $parameters['parkingPrice'];
 
@@ -176,12 +181,22 @@
 				$this->model->updateParkingPrice($price);
 		}
 
+		/*
+	
+			Method used to activate an event. Once activate the system will be able to read in tickets which match the activated Event ID.
+
+		*/
 		function setEventID($parameters){
 			$eventID = $parameters['fEventID'];
 			$this->model->setEventID($eventID);
 			$this->model->updateEventActivity($eventID);
 		}
 
+		/*
+
+			Method to report an issue (CUSTOMER)
+
+		*/
 		function reportIssue($parameters){
 			$subject = $parameters['issueSubject']; 
 			$content = $parameters['issueContent'];
@@ -203,23 +218,40 @@
 			$this->model->contactCustomerByNotification($ponumber,$subject,$content);
 		}
 
+		/*
+
+			Method to populate the details form for a user to update when submitted.
+
+		*/
 		function updateUserForm(){
 			$userId = $this->model->authenticationFactory->getIDLoggedIn();
 			$this->model->updateUserForm($userId);
 		}
+		/*
 
+			Method to search for customers using various matching parameters (ADMIN, EMPLOYEE)
+
+		*/
 		function searchCustomers($parameters){
 			$search = $parameters['searchValue'];
 			$this->model->searchCustomers($search);
 		}
 		
+		/*
 		
+			Method to delete a customer from the system. (EMPLOYEE, ADMIN)
+		
+		*/
 		function deleteCustomer($parameters){
 			$custID = $parameters['cus_id'];
 			if(! empty($custId))
 				$this->model->deleteCustomer;
 		}
+		/*
 
+			Method to delete a employee (Admin)
+
+		*/
 		function deleteEmployee($parameters){
 			$eid = $parameters['eid'];
 			if(!empty($eid))
@@ -251,7 +283,11 @@
 			}
 		}
 
-		function changePin($parameters){
+		/*
+			Method to change employee/admin pin			
+		*/
+
+		function changePin($parameters){	
 
 			$curPin = $parameters["currentPin"];
 			$newPin = $parameters["newPin"];
@@ -270,7 +306,9 @@
 			}
 		}
 
-
+		/*
+			Method to insert data for event into the database. (CUSTOMER)
+		*/
 		function createEvent($parameters){
 			$eventCreator= $this->model->authenticationFactory->getPONumberLoggedIn();
 			$ponumber = $eventCreator;
@@ -294,7 +332,9 @@
 
 			foreach($inviteNames as $index)	
 				$noOfInvites++;
- 			
+ 			/*
+				Method to insert invites data to database.
+ 			*/
 			//if(strtotime($eventDate>$dateOfCreation))
 				if($this->model->createEvent($eventCreator,$eventName,$eventDesc,$eventDate,$eventLoc,$noOfInvites,$inviteType,$eventID,$dateOfCreation))
 					foreach($inviteNames as $index=>$name){
@@ -306,13 +346,20 @@
 					}
 
 		}
-
+		/*
+			Method to delete Event
+		*/
 		function deleteEvent($parameters){
 			$eid = $parameters['ev_ID'];
 			if(! empty($eid))
 				$this->model->deleteEvent($eid);
 		}
 
+		/*	
+
+			Method to insert parking ticket data to the database.
+
+		*/
 		function createParkingTicket($parameters){
 
 			if(! empty($parameters['expiryTime'])) $initialExpiryTime = $parameters['expiryTime'];
@@ -337,6 +384,16 @@
 						//Deduct Appropriate Amount
 					
 		}
+
+		/*
+	
+			Method to update parking ticket. Called when user tops up ticket.
+
+			2 OPTIONs : 
+				-Duration
+				-Amount
+				
+		*/
 
 		function updateParkingTicket($parameters){
 			$ponumber = $this->model->authenticationFactory->getPONumberLoggedIn();
@@ -398,6 +455,12 @@
 			
 		}
 
+		/*
+
+			Method to insert stamp data to database, and call the QR generator.
+		
+		*/
+
 		function createStamp($parameters){
 
 			$destination = $parameters["destination"];
@@ -421,6 +484,11 @@
 							
 		}
 
+		/*
+
+			Method to upgrade a normal employee to admin.
+		
+		*/
 		function makeAdmin($parameters){
 
 			$eid = $parameters['eid'];
@@ -491,6 +559,12 @@
 //			return (false);
 		}
 
+
+		/*
+			
+			Method to insert new employee to database(ADMIN)
+
+		*/
 		function insertNewEmployee($parameters) {
 			$firstName = $parameters["fFirstname"];
 			$secondName = $parameters["fSurname"];

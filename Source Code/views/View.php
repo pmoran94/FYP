@@ -29,16 +29,8 @@ class View {
 		$cusloginBox = file_get_contents ( "./templates/cus_login_form.php", FILE_USE_INCLUDE_PATH );
 		$registrationForm = file_get_contents('./templates/insert_new_user_form.php',FILE_USE_INCLUDE_PATH);
 		$registrationEmployeeForm = file_get_contents('./templates/insertNewEmployee_form.php',FILE_USE_INCLUDE_PATH);
-		$updateRecordForm = file_get_contents('./templates/update_record_form.php');
-		$newRecordForm = file_get_contents('./templates/insert_new_record.php');
 		$searchCusForm = file_get_contents('./templates/search_form.php');
-		$registerButton = file_get_contents('./templates/registrationButton.php');
-		$loggedInUserActions = file_get_contents('./templates/loggedInUserActions.php');
 		$issueReport = file_get_contents('./templates/reportIssue.php');
-		$employee_issueReport = file_get_contents('./templates/employee_reportIssue_form.php');
-		$loggedInAdminActions = file_get_contents('./templates/loggedInAdminActions.php');
-		$deleteEmployee = file_get_contents('./templates/delete_employee.php');
-		$deleteCustomer = file_get_contents('./templates/deleteUser.php');
 		$userChangePassword = file_get_contents('./templates/changePasswordForm.php');
 		$topUpParkingTicketForm = file_get_contents('./templates/topUpParkingTicket_form.php');
 		$updateCustomerForm = file_get_contents('./templates/update_user_form.php');
@@ -121,9 +113,6 @@ class View {
 						}
 						else if($empLink == 'liSetEventID'){
 							$empLeftBox = $setEventIDForm;
-						}
-						else if($empLink == 'lireportIssue'){
-							$empLeftBox = $employee_issueReport;
 						}
 						else if($empLink == 'liPassChange'){
 							$empLeftBox = $changePinForm;
