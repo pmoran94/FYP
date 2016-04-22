@@ -308,7 +308,7 @@ class Model {
 		$this->qrticketsDAO->updateScanOnDepart($ticketID,$empNo);
 	}
 	public function updateScanOnArr($ticketID){
-		$this->qrticketsDAO->updateScanOnDepart($ticketID);
+		$this->qrticketsDAO->updateScanOnArr($ticketID);
 	}
 	// UNFINISHED METHOD - to check is expiry time been reached
 	public function isStampExpiryTimeValid($ticketID){

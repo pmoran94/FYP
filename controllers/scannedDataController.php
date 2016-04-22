@@ -109,7 +109,7 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 					else
 					{ 
 						if($model->hasCParkPaymentBeenMade($ticketID)/* &&  !$model->hasCParkExpiryTimeBeenReached($ticketID)*/){
-							$validity = 'valid';
+							$validity = 'Valid';
 							$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);
 							$model->updateScannedDataInPTTable($ticketID);
 						}
@@ -123,15 +123,15 @@ foreach ($objPHPExcel->getWorksheetIterator() as $worksheet)
 					}
 				}
 				else 
-					if(! $model->hasCPTicketBeenScanned($ticketID)){
-						$validity = 'Inactive';
+					if(!$model->hasCPTicketBeenScanned($ticketID)){
+						$validity = 'Valid';
 
 						//$model->insertIntoScannedData($ticketType,$ponumber,$ticketID,$eventID,$validity);//Provide Registration Details
 						//Notify User of Inactive Ticket, If Registration Matches then issue Fine and delete from scanned data
 					}
 					else
-						$validity = 'Inactive';
-						$model->updateTIDValidityInactive($ticketID); //Provide Registration Details
+						$validity = 'Valid';
+						//$model->updateTIDValidityInactive($ticketID); //Provide Registration Details
 						//Notify User of Inactive Ticket, If Registration Matches then issue Fine
 	   		}
 	   		else if($ticketType == 'EVENT'){

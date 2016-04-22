@@ -103,7 +103,7 @@ class qrticketsDAO extends BaseDAO {
 	public function hasInviteAlreadyBeenScanned($ticketID){
 		$sqlQuery = "SELECT * ";
 		$sqlQuery .= "FROM invites ";
-		$sqlQuery .= "WHERE ticketID = '$ticketID'";
+		$sqlQuery .= "WHERE inviteID = '$ticketID'";
 		$result = $this->getDbManager()->executeSelectQuery($sqlQuery);
 
 		if($result[0]['attended'] =='yes') return true;
@@ -119,7 +119,7 @@ class qrticketsDAO extends BaseDAO {
 	public function incrementAttendeesField($eventID){
 		$sqlQuery = "UPDATE events ";
 		$sqlQuery .= "SET no_of_attendees=no_of_attendees+1 ";
-		$sqlQuery .= "WHERE inviteID='$ticketID'";
+		$sqlQuery .= "WHERE eventID='$eventID'";
 		$result = $this->getDbManager()->executeQuery($sqlQuery);
 	}
 	public function isStampActive($ticketID){
